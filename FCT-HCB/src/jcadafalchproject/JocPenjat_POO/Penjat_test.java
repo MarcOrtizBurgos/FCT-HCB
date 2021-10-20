@@ -3,19 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jcadafalchproject;
+package jcadafalchproject.JocPenjat_POO;
 
 /**
  *
  * @author jcadafalch
  */
-public class JcadafalchProject {
-
-    /**
-     * @param args the command line arguments
-     */
+public class Penjat_test {
     public static void main(String[] args) {
-        // TODO code application logic here
+        Penjat penjat = new Penjat();
+        penjat.play();
     }
     
 }
