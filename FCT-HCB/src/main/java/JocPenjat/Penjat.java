@@ -1,5 +1,5 @@
 
-package jcadafalchproject.JocPenjat;
+package JocPenjat;
 
 import java.util.Random;
 import java.util.Scanner;

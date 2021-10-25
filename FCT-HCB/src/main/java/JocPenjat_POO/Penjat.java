@@ -1,4 +1,4 @@
-package jcadafalchproject.JocPenjat_POO;
+package JocPenjat_POO;
 
 import java.util.Random;
 import java.util.Scanner;
