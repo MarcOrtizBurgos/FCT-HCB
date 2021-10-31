@@ -21,7 +21,7 @@ public class Ronda {
     private int errors, wordLength, nLettersSecretWord;
     private char xWord[];
     private String secretWord, tryedLetters;
-    private Firestore db;
+    private final Firestore db;
 
     public Ronda(int maxErrors, Firestore db) {
         this.maxErrors = maxErrors;
