@@ -91,6 +91,7 @@ public class Penjat {
                             + (getMaxErrors() - getNumErrors()));
                     System.out.println("Lletres provades: " + getTryedLetters());
                     System.out.print("Introduix una lletra: ");
+                    System.out.println("");
                     char letter = sc.next().toUpperCase().charAt(0);
                     if (repeatedLetter(letter, getTryedLetters())) {
                         // calls repeatedWord to check if that letter has already 
@@ -135,6 +136,7 @@ public class Penjat {
 
             do {
                 System.out.print("Vols jugar una altra partida (S/N): ");
+                System.out.println("");
                 char YesNo = sc.next().toUpperCase().charAt(0);
                 if (YesNo == 'S') { // if the answer is Yes, starts another round
                     System.out.println("\n \n \n");
@@ -167,8 +169,10 @@ public class Penjat {
 
     private static String logIn() {
         System.out.print("Introdueix el nom d'usuari: ");
+        System.out.println("");
         username = sc.nextLine();
         System.out.print("Introdueix la contrasenya: ");
+        System.out.println("");
         passwd = sc.nextLine();
 
         // https://firebase.google.com/docs/firestore/query-data/get-data
@@ -248,8 +252,6 @@ public class Penjat {
         data.put("numErrors", numErrors);
 
         docRef.update(data);
-
-        //return docRef;
     }
 
     private static void updateTryedLetter(String tryedLetters) {
@@ -258,7 +260,6 @@ public class Penjat {
         data.put("tryedLetters", tryedLetters);
         docRef.update(data);
 
-        //return docRef;
     }
 
     private static void updateTryedLettersNumErrors(int numErrors, String tryedLetters) {
