@@ -1,4 +1,4 @@
-package io.github.jcadafalch.penjat
+package cat.copernic.jcadafalch.penjat
 
 import org.junit.Test
 
