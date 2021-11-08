@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
     tools:context=".HomeActivity">
 
     <LinearLayout
@@ -23,13 +22,17 @@
             android:id="@+id/emailTextView"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:text="Email"
-            android:textSize="15dp"
+            android:text="@string/email"
+            android:textSize="15sp"
             tools:ignore="TextContrastCheck" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="250dp"
             android:gravity="center"
             android:orientation="horizontal"
             android:textAlignment="center">
@@ -38,14 +41,56 @@
                 android:id="@+id/penjat"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
+                android:contentDescription="@string/imatge_penjat"
                 app:srcCompat="@mipmap/penjat0_foreground" />
 
-            <TextView
-                android:id="@+id/textView"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Paraula Secreta"
-                android:textAlignment="center" />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/paraula_secreta"
+                    android:hintTextColor="#78909C"
+                    android:textAlignment="center"
+                    android:textSize="34sp"
+                    tools:ignore="TextContrastCheck,TextContrastCheck" />
+
+                <TextView
+                    android:id="@+id/txtErrors"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/errors"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/txtNumErrors"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:textSize="20sp" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/textView8"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/lletres_provades"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/txtTryedLetters"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:textSize="20sp" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
         <EditText
@@ -54,9 +99,18 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorFons"
             android:ems="10"
-            android:hint="Introdueix una lletra"
+            android:hint="@string/introdueix_una_lletra"
             android:inputType="textPersonName"
-            tools:ignore="TouchTargetSizeCheck" />
+            android:textSize="20sp"
+            tools:ignore="TouchTargetSizeCheck,TextContrastCheck"
+            android:importantForAutofill="no" />
+
+        <Button
+            android:id="@+id/enviaButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/envia"
+            tools:ignore="TextContrastCheck" />
 
     </LinearLayout>
 

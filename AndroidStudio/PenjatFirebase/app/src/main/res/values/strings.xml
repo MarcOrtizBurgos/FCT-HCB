@@ -1,9 +1,14 @@
 <resources>
     <string name="app_name">PenjatFirebase</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="penjat">Penjat</string>
     <string name="txtEmail">Introdueix el teu correu electronic</string>
     <string name="exampleEmail">example@example.com</string>
     <string name="txtPassword">Introdueix la contrasenya</string>
+    <string name="errors">Errors:</string>
+    <string name="email">Email</string>
+    <string name="lletres_provades">Lletres provades</string>
+    <string name="imatge_penjat">Imatge Penjat</string>
+    <string name="paraula_secreta">Paraula Secreta</string>
+    <string name="introdueix_una_lletra">Introdueix una lletra</string>
+    <string name="envia">envia</string>
 </resources>

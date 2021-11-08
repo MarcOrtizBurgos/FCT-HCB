@@ -3,15 +3,19 @@ package cat.copernic.jcadafalch.penjatfirebase
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import cat.copernic.jcadafalch.penjatfirebase.R.layout.activity_auth
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_auth.*
+import kotlinx.android.synthetic.main.activity_home.*
 
 
 class AuthActivity : AppCompatActivity() {
-    //private val db = FirebaseFirestore.getInstance()
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +33,7 @@ class AuthActivity : AppCompatActivity() {
     }
 
     private fun setup() {
+        val db = Firebase.firestore
         title = "Autenticacion"
         singUpButton.setOnClickListener {
             if (emailEditText.text.isNotEmpty() && passwordEditText.text.isNotEmpty()) {
@@ -36,8 +41,20 @@ class AuthActivity : AppCompatActivity() {
                     emailEditText.text.toString(),
                     passwordEditText.text.toString()
                 ).addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        showHome(it.result?.user?.email ?: "")
+                    if (it.isSuccessful) { //TODO change "agrau" to email paremeter
+                        db.collection("joc").document("agrau").get().addOnSuccessListener { document ->
+                            if (document != null) {
+                                Log.d("MainActivity", "DocumentSnapshot data: ${document.get("started")}")
+                                if (document.get("started").toString() == "true"){
+                                    showRecuperaPartida(it.result?.user?.email ?: "")
+                                }
+                                if (document.get("started").toString() == "false"){
+                                    showHome(it.result?.user?.email ?: "")
+                                }
+                            } else {
+                                Log.d("MainActivity", "No such document")
+                            }
+                        }
                     } else {
                         //showAlert()
                         showAlertRegistro()
@@ -52,7 +69,21 @@ class AuthActivity : AppCompatActivity() {
                     passwordEditText.text.toString()
                 ).addOnCompleteListener {
                     if (it.isSuccessful) {
-                        showHome(it.result?.user?.email ?: "")
+                        //TODO change "agrau" to email paremeter
+                        db.collection("joc").document("agrau").get().addOnSuccessListener { document ->
+                            if (document != null) {
+                                Log.d("MainActivity", "DocumentSnapshot data: ${document.get("started")}")
+                                if (document.get("started").toString() == "true"){
+                                    showRecuperaPartida(it.result?.user?.email ?: "")
+                                }
+                                if (document.get("started").toString() == "false"){
+                                    showHome(it.result?.user?.email ?: "")
+                                }
+                            } else {
+                                Log.d("MainActivity", "No such document")
+                            }
+                        }
+
                     } else {
                         //showAlert()
                         showAlertSession()
@@ -98,5 +129,14 @@ class AuthActivity : AppCompatActivity() {
             putExtra("email", email)
         }
         startActivity(homeIntent)
+
+    }
+
+    private fun showRecuperaPartida(email: String){
+        val intent = Intent(this, RecuperaPartida::class.java).apply {
+            putExtra("email", email)
+        }
+
+        startActivity(intent)
     }
 }
