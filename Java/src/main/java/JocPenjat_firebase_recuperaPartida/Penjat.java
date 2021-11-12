@@ -26,7 +26,7 @@ import java.util.concurrent.ExecutionException;
  * @author jcadafalch
  */
 public class Penjat {
-
+ 
     private static Scanner sc = new Scanner(System.in);
     private final static Random rand = new Random();
     private static String username = "", passwd = "", tryedLetters, rightLetters, secretWord = "";

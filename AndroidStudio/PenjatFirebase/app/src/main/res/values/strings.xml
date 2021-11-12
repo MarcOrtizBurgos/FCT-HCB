@@ -11,4 +11,18 @@
     <string name="paraula_secreta">Paraula Secreta</string>
     <string name="introdueix_una_lletra">Introdueix una lletra</string>
     <string name="envia">envia</string>
+    <string name="tens_una_partida_iniciada">Tens una partida iniciada</string>
+    <string name="que_vols_fer">Què vols fer?</string>
+    <string name="recuperar_partida">Recuperar Partida</string>
+    <string name="nova_partida">Nova partida</string>
+    <string name="contrasenya">Contrasenya</string>
+    <string name="registrar">Registrar</string>
+    <string name="acceder">Acceder</string>
+    <string name="title_activity_game_won">GameWonActivity</string>
+    <string name="logout">LogOut</string>
+    <string name="tancar_sessio">Tancar Sessio</string>
+    <string name="felicitats">Felicitats</string>
+    <string name="penjat_imatge">penjat imatge</string>
+    <string name="username">username</string>
+    <string name="has_perdut">Has perdut</string>
 </resources>

@@ -7,13 +7,12 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.activity_recupera_partida.*
+import kotlinx.android.synthetic.main.activity_won.*
 
-class RecuperaPartida : AppCompatActivity() {
+class WonActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_recupera_partida)
-
+        setContentView(R.layout.activity_won)
         val bundle = intent.extras
         val username = bundle?.getString("username")
 
@@ -30,19 +29,11 @@ class RecuperaPartida : AppCompatActivity() {
         return when (item.itemId) {
             R.id.logOutIcon -> {
                 FirebaseAuth.getInstance().signOut()
-                finish()
                 showAuth()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
-
-    }
-
-    private fun showAuth() {
-        val authIntent = Intent(this, AuthActivity::class.java).apply {
-        }
-        startActivity(authIntent)
 
     }
 
@@ -53,33 +44,30 @@ class RecuperaPartida : AppCompatActivity() {
         finish()
     }
 
-    private fun setup(username: String){
-        title = ""
-
-
-        recuperaPartidabutton.setOnClickListener {
-            recoverGame(username)
-        }
-
-        novaPartidabutton.setOnClickListener {
-            newGame(username)
-        }
+    private fun showAuth() {
+        val authIntent = Intent(this, AuthActivity::class.java).apply {  }
+        startActivity(authIntent)
 
     }
 
-    private fun newGame(username: String) {
-        val homeIntent = Intent(this, HomeActivity::class.java).apply {
-            putExtra("username", username)
-            putExtra("started", false)
-        }
-        startActivity(homeIntent)
+    private fun setup(username: String) {
+        title = "Game Wom"
+        usernameWonText.text = username
 
+        logOutButton.setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
+            finish()
+            showAuth()
+        }
+
+        novaPartidaButton.setOnClickListener {
+            showHome(username)
+        }
     }
 
-    private fun recoverGame(username: String) {
+    private fun showHome(username: String) {
         val homeIntent = Intent(this, HomeActivity::class.java).apply {
             putExtra("username", username)
-            putExtra("started", true)
         }
         startActivity(homeIntent)
 

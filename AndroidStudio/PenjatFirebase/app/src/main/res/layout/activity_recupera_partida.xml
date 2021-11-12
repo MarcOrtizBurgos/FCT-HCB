@@ -1,61 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorFons"
     tools:context=".RecuperaPartida">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <TextView
-            android:id="@+id/emailTextView"
+
+        <Space
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:text="@string/email"
-            android:textSize="15sp"
-            tools:ignore="TextContrastCheck" />
+            android:layout_height="50dp" />
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:hintTextColor="#78909C"
-            android:text="Tens una partida iniciada"
+            android:text="@string/tens_una_partida_iniciada"
             android:textAlignment="center"
+            android:textColor="@color/black"
             android:textSize="34sp"
             tools:ignore="TextContrastCheck,TextContrastCheck" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="25dp" />
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:hintTextColor="#78909C"
-            android:text="Què vols fer?"
+            android:text="@string/que_vols_fer"
             android:textAlignment="center"
+            android:textColor="@color/black"
             android:textSize="20sp"
             tools:ignore="TextContrastCheck,TextContrastCheck" />
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="50dp" />
 
         <Button
             android:id="@+id/recuperaPartidabutton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Recuperar Partida" />
+            android:text="@string/recuperar_partida"
+            android:textSize="14sp"
+            tools:ignore="TextContrastCheck,TextContrastCheck" />
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="15dp" />
+            android:layout_height="50dp" />
 
         <Button
             android:id="@+id/novaPartidabutton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Nova partida" />
+            android:text="@string/nova_partida"
+            android:textSize="14sp"
+            tools:ignore="TextContrastCheck,TextContrastCheck" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

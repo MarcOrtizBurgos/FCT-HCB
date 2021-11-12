@@ -35,20 +35,25 @@ class AuthActivity : AppCompatActivity() {
     private fun setup() {
         val db = Firebase.firestore
         title = "Autenticacion"
+        var username: String
         singUpButton.setOnClickListener {
             if (emailEditText.text.isNotEmpty() && passwordEditText.text.isNotEmpty()) {
                 FirebaseAuth.getInstance().createUserWithEmailAndPassword(
                     emailEditText.text.toString(),
                     passwordEditText.text.toString()
+
                 ).addOnCompleteListener {
-                    if (it.isSuccessful) { //TODO change "agrau" to email paremeter
-                        db.collection("joc").document("agrau").get().addOnSuccessListener { document ->
+                    if (it.isSuccessful) {
+                        username = extractUsernameFromEmail(emailEditText.text.toString())
+                        db.collection("joc").document(username).get().addOnSuccessListener { document ->
                             if (document != null) {
                                 Log.d("MainActivity", "DocumentSnapshot data: ${document.get("started")}")
                                 if (document.get("started").toString() == "true"){
+                                    finish()
                                     showRecuperaPartida(it.result?.user?.email ?: "")
                                 }
                                 if (document.get("started").toString() == "false"){
+                                    finish()
                                     showHome(it.result?.user?.email ?: "")
                                 }
                             } else {
@@ -69,14 +74,17 @@ class AuthActivity : AppCompatActivity() {
                     passwordEditText.text.toString()
                 ).addOnCompleteListener {
                     if (it.isSuccessful) {
-                        //TODO change "agrau" to email paremeter
-                        db.collection("joc").document("agrau").get().addOnSuccessListener { document ->
+                        username = extractUsernameFromEmail(emailEditText.text.toString())
+                        println("GOOL $username")
+                        db.collection("joc").document(username).get().addOnSuccessListener { document ->
                             if (document != null) {
                                 Log.d("MainActivity", "DocumentSnapshot data: ${document.get("started")}")
                                 if (document.get("started").toString() == "true"){
+                                    finish()
                                     showRecuperaPartida(it.result?.user?.email ?: "")
                                 }
                                 if (document.get("started").toString() == "false"){
+                                    finish()
                                     showHome(it.result?.user?.email ?: "")
                                 }
                             } else {
@@ -126,7 +134,8 @@ class AuthActivity : AppCompatActivity() {
 
     private fun showHome(email: String) {
         val homeIntent = Intent(this, HomeActivity::class.java).apply {
-            putExtra("email", email)
+            putExtra("username", extractUsernameFromEmail(email))
+            putExtra("started", false)
         }
         startActivity(homeIntent)
 
@@ -134,9 +143,14 @@ class AuthActivity : AppCompatActivity() {
 
     private fun showRecuperaPartida(email: String){
         val intent = Intent(this, RecuperaPartida::class.java).apply {
-            putExtra("email", email)
+            putExtra("username", extractUsernameFromEmail(email))
         }
 
         startActivity(intent)
+    }
+
+    private fun extractUsernameFromEmail(email: String): String{
+        val parts: List<String> = email.split('@')
+        return parts[0]
     }
 }

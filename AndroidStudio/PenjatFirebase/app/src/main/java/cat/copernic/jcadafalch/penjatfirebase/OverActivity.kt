@@ -7,19 +7,18 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.activity_recupera_partida.*
+import kotlinx.android.synthetic.main.activity_over.*
 
-class RecuperaPartida : AppCompatActivity() {
+class OverActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_recupera_partida)
+        setContentView(R.layout.activity_over)
 
         val bundle = intent.extras
         val username = bundle?.getString("username")
 
         setup(username ?: "")
     }
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu, menu)
@@ -54,32 +53,23 @@ class RecuperaPartida : AppCompatActivity() {
     }
 
     private fun setup(username: String){
-        title = ""
+        title = "Game Over"
+        usernameOverText.text = username
 
-
-        recuperaPartidabutton.setOnClickListener {
-            recoverGame(username)
+        logOutButton.setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
+            finish()
+            showAuth()
         }
 
-        novaPartidabutton.setOnClickListener {
-            newGame(username)
+        novaPartidaButton.setOnClickListener {
+            showHome(username)
         }
-
     }
 
-    private fun newGame(username: String) {
+    private fun showHome(username: String) {
         val homeIntent = Intent(this, HomeActivity::class.java).apply {
             putExtra("username", username)
-            putExtra("started", false)
-        }
-        startActivity(homeIntent)
-
-    }
-
-    private fun recoverGame(username: String) {
-        val homeIntent = Intent(this, HomeActivity::class.java).apply {
-            putExtra("username", username)
-            putExtra("started", true)
         }
         startActivity(homeIntent)
 
