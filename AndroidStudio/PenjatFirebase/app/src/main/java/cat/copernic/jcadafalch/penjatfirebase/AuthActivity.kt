@@ -34,7 +34,7 @@ class AuthActivity : AppCompatActivity() {
 
     private fun setup() {
         val db = Firebase.firestore
-        title = "Autenticacion"
+        title = ""
         var username: String
         singUpButton.setOnClickListener {
             if (emailEditText.text.isNotEmpty() && passwordEditText.text.isNotEmpty()) {

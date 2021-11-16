@@ -88,14 +88,24 @@ class HomeActivity : AppCompatActivity() {
         }
 
         enviaButton.setOnClickListener {
-            if (editTextTextPersonName.toString().isEmpty()){
-                Toast.makeText(this, "No has introduit ninguna lletra", Toast.LENGTH_SHORT).show()
-            } else if(editTextTextPersonName.toString().isNotEmpty()){
+            when {
+                editTextTextPersonName.toString().isEmpty() -> {
+                    Toast.makeText(this, "No has introduit ninguna lletra", Toast.LENGTH_SHORT).show()
+                }
+                editTextTextPersonName.toString().isNotEmpty() -> {
 
-            }else{
-                Toast.makeText(this, "Error amb la entrada de lletra", Toast.LENGTH_SHORT).show()
+                }
+                else -> {
+                    Toast.makeText(this, "Error amb la entrada de lletra", Toast.LENGTH_SHORT).show()
+                }
             }
         }
+
+        println("SECRET WORD: TOP")
+        getXWord()
+        println("SECRET WORD: BOTTOM")
+
+        //setXWord()
 
         gameOverButton.setOnClickListener {
             showOver(username)
@@ -107,15 +117,15 @@ class HomeActivity : AppCompatActivity() {
     }
 //TODO SET UP BOTTOM-------------------------------------------------------------------------------------------------------
 
+    private fun oneCharacter(){
+        if (editTextTextPersonName.length() == 1){
+           if(editTextTextPersonName.equals("a-zA..Z")){
+
+           }
+        }
+    }
 
     private fun updateNumErrorsTryedLetters(numErrors: Int, tryedLetters: String) {
-        /*db.collection("joc").document(username).set(
-
-            hashMapOf(
-                "tryedLetters" to tryedLetters,
-                "numErrors" to numErrors
-            )
-        )*/
         db.collection("joc").document(username).update(
             hashMapOf(
                 "tryedLetters" to tryedLetters,
@@ -127,22 +137,26 @@ class HomeActivity : AppCompatActivity() {
     private fun createNewRound() {
         //newSecretWord()
         val lengthWord: Int = changedataTxt.text.toString().length
-        val xWord = CharArray(lengthWord.hashCode())
-        for (i in 0 until xWord.size) {
-            xWord[i] = 'X'
+        val secret = changedataTxt.text.length
+        var xWord: String = ""
+        for (i in 0 until secret) {
+            xWord+= "X"
         }
         db.collection("joc").document(username).set(
             hashMapOf(
                 "maxErrors" to 6,
                 "numErrors" to 0,
                 "secretWord" to changedataTxt.text.toString(),
+                "secretWordL" to changedataTxt.text.length,
                 "started" to true,
                 "tryedLetters" to "",
                 "wordLenght" to 0,
-                "xWord" to xWord.toString()
+                "xWord" to xWord
             )
         )
-       cleanChangedataTxt()
+
+        textView.text = xWord
+       //cleanChangedataTxt()
     }
 
     private fun newSecretWord() {
@@ -176,7 +190,7 @@ class HomeActivity : AppCompatActivity() {
 
 
     private fun getNumErrors() {
-        db.collection("joc").document("agrau").get().addOnSuccessListener { document ->
+        db.collection("joc").document(username).get().addOnSuccessListener { document ->
             if (document != null) {
                 Log.d("MainActivity", "DocumentSnapshot data: ${document.get("numErrors")}")
                 txtNumErrors.setText(document.get("numErrors").toString()).toString()
@@ -191,7 +205,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun getTryedLetters() {
         var tmp: String
-        db.collection("joc").document("agrau").get().addOnSuccessListener { document ->
+        db.collection("joc").document(username).get().addOnSuccessListener { document ->
             if (document != null) {
                 Log.d("MainActivity", "DocumentSnapshot data: ${document.get("tryedLetters")}")
                 txtTryedLetters.text = document.get("tryedLetters").toString()
@@ -215,6 +229,21 @@ class HomeActivity : AppCompatActivity() {
             else -> Toast.makeText(this, "Error amb el numero de errors", Toast.LENGTH_SHORT).show()
         }
 
+    }
+
+    private fun getXWord(){
+        db.collection("joc").document(username).get().addOnSuccessListener { document ->
+            val secret = document.get("xWord").toString()
+
+            while (secret == ""){
+                println("SECRET WORD: $secret")
+            }
+
+            println("SECRET WORD: $secret")
+
+            textView.text = secret
+
+        }
     }
 
     //TODO DELETE BUTTON NAV TEST---------------------------------------

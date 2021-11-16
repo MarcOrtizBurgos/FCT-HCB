@@ -16,14 +16,6 @@
             android:name=".WonActivity"
             android:exported="false" />
         <activity
-            android:name=".GameWonActivity"
-            android:exported="false"
-            android:label="@string/title_activity_game_won"
-            android:theme="@style/Theme.PenjatFirebase.NoActionBar" />
-        <activity
-            android:name=".WinActivity"
-            android:exported="false" />
-        <activity
             android:name=".RecuperaPartida"
             android:exported="false" />
         <activity
