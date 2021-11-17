@@ -3,7 +3,7 @@ package cat.copernic.jcadafalch.penjatfirebase
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.os.Handler
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -13,9 +13,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_home.*
-import kotlin.collections.ArrayList
-import kotlin.random.Random
-import java.util.*
+import java.lang.StringBuilder
 import kotlin.collections.hashMapOf as hashMapOf
 
 
@@ -23,16 +21,15 @@ import kotlin.collections.hashMapOf as hashMapOf
 private val db = Firebase.firestore
 
 
-
-
 class HomeActivity : AppCompatActivity() {
-    private lateinit var username:  String
-    private lateinit var tryedLetters: String
-    private lateinit var secretWord:  String
-    private var maxErrors: Int = 0
+    private lateinit var username: String
+    private var tryedLetters = ""
+    private var secretWord = ""
+    private var xWord = ""
+    private var maxErrors: Int = 6
     private var numErrors: Int = 0
-    private var errors: Int = 0
-    private var wordLength:  Int = 0
+    private var wordLength: Int = 0
+    private var finishRound = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,8 +37,7 @@ class HomeActivity : AppCompatActivity() {
 
         val bundle = intent.extras
         username = bundle?.getString("username").toString()
-        val started: Boolean = bundle?.getBoolean("started") == true
-        setup(started)
+        setup()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -60,14 +56,12 @@ class HomeActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
-
     }
 
     private fun showAuth() {
         val authIntent = Intent(this, AuthActivity::class.java).apply {
         }
         startActivity(authIntent)
-
     }
 
     override fun onBackPressed() {
@@ -77,147 +71,126 @@ class HomeActivity : AppCompatActivity() {
         finish()
     }
 
-    //TODO SETUP TOP-------------------------------------------------------------------------------
-    @SuppressLint("SetTextI18n")
-    private fun setup(started: Boolean) {
+    private fun setup() {
         title = ""
-        emailTextView.text = "Benvingut $username"
+        val user = "Benvingut $username"
+        emailTextView.text = user
 
-        if (!started) {
-            newSecretWord()
-        }
+        getAllValues()
+
+        Handler().postDelayed(
+            {
+
+            },
+            500
+        )
 
         enviaButton.setOnClickListener {
             when {
                 editTextTextPersonName.toString().isEmpty() -> {
-                    Toast.makeText(this, "No has introduit ninguna lletra", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "No has introduit ninguna lletra", Toast.LENGTH_SHORT)
+                        .show()
                 }
                 editTextTextPersonName.toString().isNotEmpty() -> {
+                    if (oneCharacter()) {
+                        val c = editTextTextPersonName.text[0]
+                        tryedLetters += c
+                        txtTryedLetters.text = tryedLetters
+                        updateTryedLetters()
+                        var guessCorrectWord = false
+                        var i = 0
+                        while (i < secretWord.length) {
+                            if (secretWord[i] == c) {
+                                xWord = StringBuilder(xWord).also { it.setCharAt(i, c) }.toString()
+                                guessCorrectWord = true
+                                wordLength++
+                            }
+                            updateWordLength()
+                            i++
+                        }
+                        i = 0
+                        var rightLetters = ""
+                        while (i < secretWord.length) {
+                            rightLetters += xWord[i]
+                            i++
+                        }
 
+                        updateXWord()
+                        if (!guessCorrectWord) {
+                            Toast.makeText(
+                                this,
+                                "Aquesta paraula no conté la lletra $c.",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                            numErrors++
+                            setImageErrors(numErrors)
+                            updateNumErrors()
+                        }
+                    }
+                    editTextTextPersonName.setText("")
+                    getAllValues()
+
+                    if (maxErrors - numErrors == 0) {
+                        setStartedFalse()
+                        finishRound = true
+                        showOver(username)
+                    }
+                    if (wordLength == secretWord.length) {
+                        setStartedFalse()
+                        finishRound = true
+                        showWon(username)
+                    }
                 }
-                else -> {
-                    Toast.makeText(this, "Error amb la entrada de lletra", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-
-        println("SECRET WORD: TOP")
-        getXWord()
-        println("SECRET WORD: BOTTOM")
-
-        //setXWord()
-
-        gameOverButton.setOnClickListener {
-            showOver(username)
-        }
-
-        gameWonButton.setOnClickListener {
-            showWon(username)
-        }
-    }
-//TODO SET UP BOTTOM-------------------------------------------------------------------------------------------------------
-
-    private fun oneCharacter(){
-        if (editTextTextPersonName.length() == 1){
-           if(editTextTextPersonName.equals("a-zA..Z")){
-
-           }
-        }
-    }
-
-    private fun updateNumErrorsTryedLetters(numErrors: Int, tryedLetters: String) {
-        db.collection("joc").document(username).update(
-            hashMapOf(
-                "tryedLetters" to tryedLetters,
-                "numErrors" to numErrors
-            ) as Map<String, Any>
-        )
-    }
-
-    private fun createNewRound() {
-        //newSecretWord()
-        val lengthWord: Int = changedataTxt.text.toString().length
-        val secret = changedataTxt.text.length
-        var xWord: String = ""
-        for (i in 0 until secret) {
-            xWord+= "X"
-        }
-        db.collection("joc").document(username).set(
-            hashMapOf(
-                "maxErrors" to 6,
-                "numErrors" to 0,
-                "secretWord" to changedataTxt.text.toString(),
-                "secretWordL" to changedataTxt.text.length,
-                "started" to true,
-                "tryedLetters" to "",
-                "wordLenght" to 0,
-                "xWord" to xWord
-            )
-        )
-
-        textView.text = xWord
-       //cleanChangedataTxt()
-    }
-
-    private fun newSecretWord() {
-
-        db.collection("words").document("arrWords").get().addOnSuccessListener { document ->
-            if (document != null) {
-                //changedataTxt.setText(document.get("arrayW").toString())
-                changedataTxt.text = randomWord(document.get("arrayW").toString())
-                createNewRound()
             }
         }
     }
 
-    private fun randomWord(word: String): String {
-        /*val replace: String = word.replace("[", "")
-        val replace1 = replace.replace("]", "")
-        val arrWords: String = ArrayList<String>(replace1.split(", ")).toString()
-        val rand = Random
-        val rt = rand.nextInt(arrWords.length);
-        return arrWords[1].toString()*/
-
-        val replace = word.replace("[", "")
-        val replace1 = replace.replace("]", "")
-        val arrWords = Arrays.asList(replace1.split(", ").toTypedArray())
-        val rand = Random
-        //val rt = rand.nextInt(arrWords.size)
-        val rt = (0 until 10).random()
-        //print(arrWords[0][0])
-        return arrWords[0][rt]
-    }
-
-
-    private fun getNumErrors() {
-        db.collection("joc").document(username).get().addOnSuccessListener { document ->
-            if (document != null) {
-                Log.d("MainActivity", "DocumentSnapshot data: ${document.get("numErrors")}")
-                txtNumErrors.setText(document.get("numErrors").toString()).toString()
+    private fun oneCharacter(): Boolean {
+        return if (Character.isLetter(editTextTextPersonName.text[0])) {
+            val c = editTextTextPersonName.text[0]
+            if (repeatedLetter(c)) {
+                Toast.makeText(this, "Aquesta lletra ja l'has provat.", Toast.LENGTH_SHORT).show()
+                false
             } else {
-                Log.d("MainActivity", "No such document")
+                true
             }
+        } else {
+            Toast.makeText(this, "El caràcter introduït no és una lletra.", Toast.LENGTH_SHORT)
+                .show()
+            false
         }
-            .addOnFailureListener { exception ->
-                Log.d("MainActivity", "get failed with ", exception)
-            }
     }
 
-    private fun getTryedLetters() {
-        var tmp: String
+    private fun repeatedLetter(c: Char): Boolean {
+        var repeatedLetter = false
+        var i = 0
+        while (i < tryedLetters.length) {
+            if (tryedLetters[i] == c) {
+                repeatedLetter = true
+            }
+            i++
+        }
+
+        return repeatedLetter
+    }
+
+    private fun getAllValues() {
         db.collection("joc").document(username).get().addOnSuccessListener { document ->
             if (document != null) {
-                Log.d("MainActivity", "DocumentSnapshot data: ${document.get("tryedLetters")}")
+                wordLength = document.get("wordLenght").hashCode()
+                maxErrors = document.get("maxErrors").hashCode()
+                numErrors = document.get("numErrors").hashCode()
+                txtNumErrors.text = document.get("numErrors").hashCode().toString()
+                secretWord = document.get("secretWord").toString()
+                xWord = document.get("xWord").toString()
+                textViewPIniciada.text = document.get("xWord").toString()
+                tryedLetters = document.get("tryedLetters").toString()
                 txtTryedLetters.text = document.get("tryedLetters").toString()
-                //tmp = document.data?.get("tryedLetters").toString()
-
-            } else {
-                Log.d("MainActivity", "No such document")
             }
         }
     }
 
-    private fun setImageErrors(errors: Int){
+    private fun setImageErrors(errors: Int) {
         when (errors) {
             0 -> penjat.setImageResource(R.mipmap.penjat0_foreground)
             1 -> penjat.setImageResource(R.mipmap.penjat1_foreground)
@@ -231,22 +204,44 @@ class HomeActivity : AppCompatActivity() {
 
     }
 
-    private fun getXWord(){
-        db.collection("joc").document(username).get().addOnSuccessListener { document ->
-            val secret = document.get("xWord").toString()
-
-            while (secret == ""){
-                println("SECRET WORD: $secret")
-            }
-
-            println("SECRET WORD: $secret")
-
-            textView.text = secret
-
-        }
+    private fun updateNumErrors() {
+        db.collection("joc").document(username).update(
+            hashMapOf(
+                "numErrors" to numErrors
+            ) as Map<String, Any>
+        )
     }
 
-    //TODO DELETE BUTTON NAV TEST---------------------------------------
+    private fun updateWordLength() {
+        db.collection("joc").document(username).update(
+            hashMapOf(
+                "wordLenght" to wordLength
+            ) as Map<String, Any>
+        )
+    }
+
+    private fun updateTryedLetters() {
+        db.collection("joc").document(username).update(
+            hashMapOf(
+                "tryedLetters" to tryedLetters
+            ) as Map<String, Any>
+        )
+    }
+
+    private fun updateXWord() {
+        db.collection("joc").document(username).update(
+            hashMapOf(
+                "xWord" to xWord
+            ) as Map<String, Any>
+        )
+    }
+
+    private fun setStartedFalse() {
+        db.collection("joc").document(username).update(
+            hashMapOf("started" to false) as Map<String, Any>
+        )
+    }
+
     private fun showWon(username: String) {
         val wonIntent = Intent(this, WonActivity::class.java).apply {
             putExtra("username", username)
@@ -262,10 +257,4 @@ class HomeActivity : AppCompatActivity() {
 
         startActivity(overIntent)
     }
-
-    private fun cleanChangedataTxt(){
-        changedataTxt.text = ""
-    }
 }
-
-

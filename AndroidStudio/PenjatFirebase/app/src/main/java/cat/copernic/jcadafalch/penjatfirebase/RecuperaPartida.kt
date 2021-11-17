@@ -1,23 +1,31 @@
 package cat.copernic.jcadafalch.penjatfirebase
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_recupera_partida.*
 
+
+@SuppressLint("StaticFieldLeak")
+private val db = Firebase.firestore
+
 class RecuperaPartida : AppCompatActivity() {
+    private lateinit var username:  String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recupera_partida)
 
         val bundle = intent.extras
-        val username = bundle?.getString("username")
-
-        setup(username ?: "")
+        username = bundle?.getString("username").toString()
+        setup()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -43,7 +51,6 @@ class RecuperaPartida : AppCompatActivity() {
         val authIntent = Intent(this, AuthActivity::class.java).apply {
         }
         startActivity(authIntent)
-
     }
 
     override fun onBackPressed() {
@@ -53,35 +60,78 @@ class RecuperaPartida : AppCompatActivity() {
         finish()
     }
 
-    private fun setup(username: String){
+    private fun setup(){
         title = ""
 
-
         recuperaPartidabutton.setOnClickListener {
-            recoverGame(username)
+            recoverGame()
         }
-
         novaPartidabutton.setOnClickListener {
-            newGame(username)
+            newGame()
         }
-
     }
 
-    private fun newGame(username: String) {
-        val homeIntent = Intent(this, HomeActivity::class.java).apply {
-            putExtra("username", username)
-            putExtra("started", false)
-        }
-        startActivity(homeIntent)
-
-    }
-
-    private fun recoverGame(username: String) {
+    private fun newGame() {
         val homeIntent = Intent(this, HomeActivity::class.java).apply {
             putExtra("username", username)
             putExtra("started", true)
         }
-        startActivity(homeIntent)
+        newSecretWord()
 
+        Handler().postDelayed(
+                {
+                    startActivity(homeIntent)
+                },
+            500
+        )
+    }
+
+    private fun recoverGame() {
+        val homeIntent = Intent(this, HomeActivity::class.java).apply {
+            putExtra("username", username)
+            putExtra("started", true)
+        }
+        finish()
+        startActivity(homeIntent)
+    }
+
+
+    private fun newSecretWord() {
+
+        db.collection("words").document("arrWords").get().addOnSuccessListener { document ->
+            if (document != null) {
+                //changedataTxt.setText(document.get("arrayW").toString())
+                changedataTxt2.text = randomWord(document.get("arrayW").toString())
+                createNewRound()
+            }
+        }
+    }
+
+    private fun createNewRound() {
+        val secret = changedataTxt2.text.length
+        var xWord = ""
+        for (i in 0 until secret) {
+            xWord+= "X"
+        }
+        db.collection("joc").document(username).set(
+            hashMapOf(
+                "maxErrors" to 6,
+                "numErrors" to 0,
+                "secretWord" to changedataTxt2.text.toString(),
+                "secretWordL" to changedataTxt2.text.length,
+                "started" to true,
+                "tryedLetters" to "",
+                "wordLenght" to 0,
+                "xWord" to xWord
+            )
+        )
+    }
+
+    private fun randomWord(word: String): String {
+        val replace = word.replace("[", "")
+        val replace1 = replace.replace("]", "")
+        val arrWords = listOf(replace1.split(", ").toTypedArray())
+        val rt = (0 until 10).random()
+        return arrWords[0][rt]
     }
 }

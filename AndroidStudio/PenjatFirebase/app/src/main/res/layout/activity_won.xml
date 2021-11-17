@@ -70,5 +70,11 @@
             android:text="@string/tancar_sessio"
             android:textSize="20sp"
             tools:ignore="TextContrastCheck" />
+
+        <TextView
+            android:id="@+id/changedataTxt3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
