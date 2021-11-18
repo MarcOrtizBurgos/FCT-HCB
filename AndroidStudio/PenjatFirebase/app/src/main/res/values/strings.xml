@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PenjatFirebase</string>
+    <string name="app_name">Penjat</string>
     <string name="penjat">Penjat</string>
     <string name="txtEmail">Introdueix el teu correu electronic</string>
     <string name="exampleEmail">example@example.com</string>
