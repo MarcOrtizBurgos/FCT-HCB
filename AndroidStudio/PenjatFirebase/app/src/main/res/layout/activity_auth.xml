@@ -46,6 +46,7 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_weight="1"
+                android:contentDescription="@string/penjat_0_fallos"
                 app:srcCompat="@mipmap/penjat0_foreground" />
 
             <ImageView
@@ -53,6 +54,7 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_weight="1"
+                android:contentDescription="@string/penjat_6_fallos"
                 app:srcCompat="@mipmap/penjat6_foreground" />
         </LinearLayout>
 
@@ -64,25 +66,39 @@
         <EditText
             android:id="@+id/emailEditText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:ems="10"
             android:hint="@string/email"
+            android:importantForAutofill="no"
             android:inputType="textEmailAddress"
-            tools:ignore="TouchTargetSizeCheck" />
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            tools:ignore="TouchTargetSizeCheck,TextContrastCheck,TextContrastCheck" />
 
         <Space
             android:layout_width="match_parent"
             android:layout_height="10dp"
             android:layout_weight="1" />
 
-        <EditText
-            android:id="@+id/passwordEditText"
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/contrasenya"
-            android:inputType="textPassword"
-            tools:ignore="TouchTargetSizeCheck" />
+            android:layout_height="match_parent"
+            app:boxBackgroundColor="@color/colorFons"
+            app:boxStrokeColor="@color/colorFons"
+            app:endIconMode="password_toggle">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/passwordEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:ems="10"
+                android:hint="@string/contrasenya"
+                android:inputType="textPassword"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                tools:ignore="TextContrastCheck,TextContrastCheck" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Space
             android:layout_width="match_parent"
@@ -100,7 +116,8 @@
                 android:layout_weight="1"
                 android:backgroundTint="@color/colorPrimary"
                 android:text="@string/registrar"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"
+                tools:ignore="TextContrastCheck" />
 
             <Space
                 android:layout_width="wrap_content"
@@ -116,5 +133,20 @@
                 android:text="@string/acceder"
                 android:textColor="@android:color/white" />
         </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="25dp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/changedataTxt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

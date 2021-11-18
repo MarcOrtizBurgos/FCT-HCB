@@ -26,6 +26,8 @@ class AuthActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(activity_auth)
 
+        supportActionBar?.hide()
+
         //Analytics Event
         val analytics = FirebaseAnalytics.getInstance(this)
         val bundle = Bundle()
@@ -39,7 +41,7 @@ class AuthActivity : AppCompatActivity() {
         val db = Firebase.firestore
         title = ""
         singUpButton.setOnClickListener {
-            if (emailEditText.text.isNotEmpty() && passwordEditText.text.isNotEmpty()) {
+            if (emailEditText.text.isNotEmpty() && !passwordEditText.text.isNullOrEmpty()) {
                 FirebaseAuth.getInstance().createUserWithEmailAndPassword(
                     emailEditText.text.toString(),
                     passwordEditText.text.toString()
@@ -47,34 +49,24 @@ class AuthActivity : AppCompatActivity() {
                 ).addOnCompleteListener {
                     if (it.isSuccessful) {
                         username = extractUsernameFromEmail(emailEditText.text.toString())
-                        db.collection("joc").document(username).get()
-                            .addOnSuccessListener { document ->
-                                if (document != null) {
-                                    Log.d(
-                                        "MainActivity",
-                                        "DocumentSnapshot data: ${document.get("started")}"
-                                    )
-                                    if (document.get("started").toString() == "true") {
-                                        finish()
-                                        showRecuperaPartida(it.result?.user?.email ?: "")
-                                    }
-                                    if (document.get("started").toString() == "false") {
-                                        finish()
-                                        showHome(it.result?.user?.email ?: "")
-                                    }
-                                } else {
-                                    Log.d("MainActivity", "No such document")
-                                }
-                            }
+                        makeregister(username, passwordEditText.text.toString())
+                        Handler().postDelayed(
+                            {
+                                showHome(it.result?.user?.email ?: "")
+                            },
+                            500
+                        )
+
                     } else {
-                        //showAlert()
                         showAlertRegistro()
                     }
                 }
+            } else {
+                showAlert("Els camps estan buits")
             }
         }
         logInButton.setOnClickListener {
-            if (emailEditText.text.isNotEmpty() && passwordEditText.text.isNotEmpty()) {
+            if (emailEditText.text.isNotEmpty() && !passwordEditText.text.isNullOrEmpty()) {
                 FirebaseAuth.getInstance().signInWithEmailAndPassword(
                     emailEditText.text.toString(),
                     passwordEditText.text.toString()
@@ -85,10 +77,6 @@ class AuthActivity : AppCompatActivity() {
                         db.collection("joc").document(username).get()
                             .addOnSuccessListener { document ->
                                 if (document != null) {
-                                    Log.d(
-                                        "MainActivity",
-                                        "DocumentSnapshot data: ${document.get("started")}"
-                                    )
                                     if (document.get("started").toString() == "true") {
                                         finish()
                                         showRecuperaPartida(it.result?.user?.email ?: "")
@@ -103,21 +91,32 @@ class AuthActivity : AppCompatActivity() {
                             }
 
                     } else {
-                        //showAlert()
                         showAlertSession()
                     }
                 }
+            } else {
+                showAlert("Els camps estan buits")
             }
         }
     }
 
+    private fun showAlert(msg: String) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Error")
+        builder.setMessage(msg)
+        builder.setPositiveButton("Acceptar", null)
+        val dialog: AlertDialog = builder.create()
+        dialog.show()
+    }
+
     private fun showAlertRegistro() {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Error con el registro")
+        builder.setTitle("Error amb el registre")
         builder.setMessage(
-            "Se ha producido un error al intentar registrar a este usuario\n\n" +
-                    "Si la contrasenya es menor de 6 caracteres puede ser motivo de este error \n\n" +
-                    "Considere la possibilidad que este usuario ya esté registrado"
+            "S\'ha produït un error en intentar registrar a aquest usuari\n\n" +
+                    "\n" +
+                    "Si la contrasenya és menor de 6 caràcters pot ser motiu d'aquest error \n\n" +
+                    "Consideri la possibilitat que aquest usuari ja estigui registrat"
         )
         builder.setPositiveButton("Aceptar", null)
         val dialog: AlertDialog = builder.create()
@@ -128,10 +127,10 @@ class AuthActivity : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Error con el Inicio de Sessión")
         builder.setMessage(
-            "Se ha producido un error al intentar iniciar sessión\n\n" +
-                    "Considere la posibilidad que este usuario no esté registrado."
+            "S'ha produït un error en intentar iniciar sessió\n\n" +
+                    "Consideri la possibilitat que aquest usuari no estigui registrat."
         )
-        builder.setPositiveButton("Aceptar", null)
+        builder.setPositiveButton("Acceptar", null)
         val dialog: AlertDialog = builder.create()
         dialog.show()
     }
@@ -162,17 +161,17 @@ class AuthActivity : AppCompatActivity() {
     }
 
     private fun newSecretWord() {
-
+        changedataTxt.text = ""
         db.collection("words").document("arrWords").get().addOnSuccessListener { document ->
             if (document != null) {
-                changedataTxt3.text = randomWord(document.get("arrayW").toString())
+                changedataTxt.text = randomWord(document.get("arrayW").toString())
                 createNewRound()
             }
         }
     }
 
     private fun createNewRound() {
-        val secret = changedataTxt3.text.length
+        val secret = changedataTxt.text.length
         var xWord = ""
         for (i in 0 until secret) {
             xWord += "X"
@@ -181,8 +180,8 @@ class AuthActivity : AppCompatActivity() {
             hashMapOf(
                 "maxErrors" to 6,
                 "numErrors" to 0,
-                "secretWord" to changedataTxt3.text.toString(),
-                "secretWordL" to changedataTxt3.text.length,
+                "secretWord" to changedataTxt.text.toString(),
+                "secretWordL" to changedataTxt.text.length,
                 "started" to true,
                 "tryedLetters" to "",
                 "wordLenght" to 0,
@@ -197,5 +196,43 @@ class AuthActivity : AppCompatActivity() {
         val arrWords = listOf(replace1.split(", ").toTypedArray())
         val rt = (0 until 10).random()
         return arrWords[0][rt]
+    }
+
+    private fun makeregister(username: String, passwd: String) {
+        var bool1 = false
+        var bool2 = false
+        db.collection("users").document(username).set(
+            hashMapOf("username" to username, "password" to passwd)
+        ).addOnCompleteListener {
+            if (it.isSuccessful) {
+                bool1 = true
+            } else {
+                showAlert("Error a l\'hora de fer el guardat de usuari")
+            }
+        }
+
+        val secret = changedataTxt.text.length
+        var xWord = ""
+        for (i in 0 until secret) {
+            xWord += "X"
+        }
+        db.collection("joc").document(username).set(
+            hashMapOf(
+                "maxErrors" to 6,
+                "numErrors" to 0,
+                "secretWord" to changedataTxt.text.toString(),
+                "secretWordL" to changedataTxt.text.length,
+                "started" to true,
+                "tryedLetters" to "",
+                "wordLenght" to 0,
+                "xWord" to xWord
+            )
+        ).addOnCompleteListener {
+            if (it.isSuccessful) {
+                bool2 = true
+            } else {
+                showAlert("Error a l\'hora de fer el guardat de dades")
+            }
+        }
     }
 }

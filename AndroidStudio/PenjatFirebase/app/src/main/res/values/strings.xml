@@ -25,4 +25,6 @@
     <string name="penjat_imatge">penjat imatge</string>
     <string name="username">username</string>
     <string name="has_perdut">Has perdut</string>
+    <string name="penjat_0_fallos">Penjat 0 fallos</string>
+    <string name="penjat_6_fallos">Penjat 6 fallos</string>
 </resources>
