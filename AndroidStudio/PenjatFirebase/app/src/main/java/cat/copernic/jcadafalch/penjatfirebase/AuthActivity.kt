@@ -175,7 +175,7 @@ class AuthActivity : AppCompatActivity() {
         val secret = changedataTxt.text.length
         var xWord = ""
         for (i in 0 until secret) {
-            xWord += "X"
+            xWord += "x"
         }
         db.collection("joc").document(username).set(
             hashMapOf(
