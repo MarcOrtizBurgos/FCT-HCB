@@ -11,19 +11,23 @@ import android.view.MenuItem
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.android.synthetic.main.activity_over.*
 import kotlinx.android.synthetic.main.activity_won.*
+import kotlinx.android.synthetic.main.activity_won.logOutButton
+import kotlinx.android.synthetic.main.activity_won.novaPartidaButton
 
 @SuppressLint("StaticFieldLeak")
 private val db = Firebase.firestore
 
 class WonActivity : AppCompatActivity() {
     private lateinit var username: String
+    private lateinit var secretWord: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_won)
         val bundle = intent.extras
         username = bundle?.getString("username").toString()
-
+        secretWord = bundle?.getString("secretWord").toString()
         setup()
     }
 
@@ -56,10 +60,11 @@ class WonActivity : AppCompatActivity() {
         startActivity(authIntent)
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setup() {
         title = ""
         usernameWonText.text = username
-
+        secretWordText2.text = "La paraula secreta era: $secretWord"
         logOutButton.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             finish()

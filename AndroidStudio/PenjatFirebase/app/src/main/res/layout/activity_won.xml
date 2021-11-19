@@ -14,7 +14,7 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="75dp" />
+            android:layout_height="50dp" />
 
         <TextView
             android:id="@+id/perdutText"
@@ -34,9 +34,17 @@
             android:textColor="#000000"
             android:textSize="50sp" />
 
+        <TextView
+            android:id="@+id/secretWordText2"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:textAlignment="center"
+            android:textColor="#000000"
+            android:textSize="30sp" />
+
         <Space
             android:layout_width="match_parent"
-            android:layout_height="50dp" />
+            android:layout_height="35dp" />
 
         <ImageView
             android:id="@+id/penjatImage"
@@ -45,10 +53,6 @@
             android:layout_gravity="center"
             android:contentDescription="@string/penjat_imatge"
             app:srcCompat="@mipmap/penjat0_foreground" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="50dp" />
 
         <Button
             android:id="@+id/novaPartidaButton"

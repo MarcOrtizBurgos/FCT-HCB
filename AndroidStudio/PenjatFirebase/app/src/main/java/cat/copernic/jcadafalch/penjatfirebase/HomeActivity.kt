@@ -245,6 +245,7 @@ class HomeActivity : AppCompatActivity() {
     private fun showWon(username: String) {
         val wonIntent = Intent(this, WonActivity::class.java).apply {
             putExtra("username", username)
+            putExtra("secretWord", secretWord)
         }
 
         startActivity(wonIntent)
@@ -253,6 +254,7 @@ class HomeActivity : AppCompatActivity() {
     private fun showOver(username: String) {
         val overIntent = Intent(this, OverActivity::class.java).apply {
             putExtra("username", username)
+            putExtra("secretWord", secretWord)
         }
 
         startActivity(overIntent)

@@ -19,13 +19,14 @@ private val db = Firebase.firestore
 
 class OverActivity : AppCompatActivity() {
     private lateinit var username: String
+    private lateinit var secretWord: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_over)
 
         val bundle = intent.extras
         username = bundle?.getString("username").toString()
-
+        secretWord = bundle?.getString("secretWord").toString()
         setup()
     }
 
@@ -62,9 +63,11 @@ class OverActivity : AppCompatActivity() {
         finish()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setup() {
         title = ""
         usernameOverText.text = username
+        secretWordText.text = "La paraula secreta era: $secretWord"
 
         logOutButton.setOnClickListener {
             FirebaseAuth.getInstance().signOut()

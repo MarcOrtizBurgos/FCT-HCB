@@ -49,13 +49,14 @@ class AuthActivity : AppCompatActivity() {
                 ).addOnCompleteListener {
                     if (it.isSuccessful) {
                         username = extractUsernameFromEmail(emailEditText.text.toString())
-                        makeregister(username, passwordEditText.text.toString())
-                        Handler().postDelayed(
-                            {
-                                showHome(it.result?.user?.email ?: "")
-                            },
-                            500
-                        )
+                        if (makeregister(username, passwordEditText.text.toString())){
+                            Handler().postDelayed(
+                                {
+                                    showHome(it.result?.user?.email ?: "")
+                                },
+                                500
+                            )
+                        }
 
                     } else {
                         showAlertRegistro()
@@ -198,7 +199,7 @@ class AuthActivity : AppCompatActivity() {
         return arrWords[0][rt]
     }
 
-    private fun makeregister(username: String, passwd: String) {
+    private fun makeregister(username: String, passwd: String):Boolean {
         var bool1 = false
         var bool2 = false
         db.collection("users").document(username).set(
@@ -234,5 +235,7 @@ class AuthActivity : AppCompatActivity() {
                 showAlert("Error a l\'hora de fer el guardat de dades")
             }
         }
+        return bool1&&bool2
     }
+
 }
