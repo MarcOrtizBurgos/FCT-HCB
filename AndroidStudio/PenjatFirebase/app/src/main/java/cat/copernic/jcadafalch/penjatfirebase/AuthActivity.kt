@@ -59,11 +59,13 @@ class AuthActivity : AppCompatActivity() {
                         }
 
                     } else {
-                        showAlertRegistro()
+                        showAlert("Error amb el registre", "S\'ha produït un error en " +
+                                "intentar registrar a aquest usuari\n\n" +
+                                "Consideri la possibilitat que aquest usuari ja estigui registrat")
                     }
                 }
             } else {
-                showAlert("Els camps estan buits")
+                showAlert("Error!", "Els camps estan buits")
             }
         }
         logInButton.setOnClickListener {
@@ -92,45 +94,21 @@ class AuthActivity : AppCompatActivity() {
                             }
 
                     } else {
-                        showAlertSession()
+                        showAlert("Error con el Inicio de Sessión", "S'ha produït un error " +
+                                "en intentar iniciar sessió\n\n" +
+                                "Consideri la possibilitat que aquest usuari no estigui registrat.")
                     }
                 }
             } else {
-                showAlert("Els camps estan buits")
+                showAlert("Error!","Els camps estan buits")
             }
         }
     }
 
-    private fun showAlert(msg: String) {
+    private fun showAlert(title: String,msg: String) {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Error")
+        builder.setTitle(title)
         builder.setMessage(msg)
-        builder.setPositiveButton("Acceptar", null)
-        val dialog: AlertDialog = builder.create()
-        dialog.show()
-    }
-
-    private fun showAlertRegistro() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Error amb el registre")
-        builder.setMessage(
-            "S\'ha produït un error en intentar registrar a aquest usuari\n\n" +
-                    "\n" +
-                    "Si la contrasenya és menor de 6 caràcters pot ser motiu d'aquest error \n\n" +
-                    "Consideri la possibilitat que aquest usuari ja estigui registrat"
-        )
-        builder.setPositiveButton("Aceptar", null)
-        val dialog: AlertDialog = builder.create()
-        dialog.show()
-    }
-
-    private fun showAlertSession() {
-        val builder = AlertDialog.Builder(this)
-        builder.setTitle("Error con el Inicio de Sessión")
-        builder.setMessage(
-            "S'ha produït un error en intentar iniciar sessió\n\n" +
-                    "Consideri la possibilitat que aquest usuari no estigui registrat."
-        )
         builder.setPositiveButton("Acceptar", null)
         val dialog: AlertDialog = builder.create()
         dialog.show()
@@ -208,7 +186,7 @@ class AuthActivity : AppCompatActivity() {
             if (it.isSuccessful) {
                 bool1 = true
             } else {
-                showAlert("Error a l\'hora de fer el guardat de usuari")
+                showAlert("Error!","Error a l\'hora de fer el guardat de usuari")
             }
         }
 
@@ -232,7 +210,7 @@ class AuthActivity : AppCompatActivity() {
             if (it.isSuccessful) {
                 bool2 = true
             } else {
-                showAlert("Error a l\'hora de fer el guardat de dades")
+                showAlert("Error!","Error a l\'hora de fer el guardat de dades")
             }
         }
         return bool1&&bool2

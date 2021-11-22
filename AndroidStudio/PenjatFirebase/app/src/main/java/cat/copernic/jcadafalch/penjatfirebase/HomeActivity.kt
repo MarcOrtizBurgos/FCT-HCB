@@ -2,12 +2,14 @@ package cat.copernic.jcadafalch.penjatfirebase
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.auth.FirebaseAuth
@@ -31,6 +33,7 @@ class HomeActivity : AppCompatActivity() {
     private var wordLength: Int = 0
     private var finishRound = false
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -93,15 +96,15 @@ class HomeActivity : AppCompatActivity() {
                 }
                 editTextTextPersonName.toString().isNotEmpty() -> {
                     if (oneCharacter()) {
-                        val c = editTextTextPersonName.text[0]
+                        val c = editTextTextPersonName.text[0].toString().uppercase()
                         tryedLetters += c
                         txtTryedLetters.text = tryedLetters
                         updateTryedLetters()
                         var guessCorrectWord = false
                         var i = 0
                         while (i < secretWord.length) {
-                            if (secretWord[i] == c) {
-                                xWord = StringBuilder(xWord).also { it.setCharAt(i, c) }.toString()
+                            if (secretWord[i].toString() == c) {
+                                xWord = StringBuilder(xWord).also { it.setCharAt(i, c[0]) }.toString()
                                 guessCorrectWord = true
                                 wordLength++
                             }
@@ -147,7 +150,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun oneCharacter(): Boolean {
         return if (Character.isLetter(editTextTextPersonName.text[0])) {
-            val c = editTextTextPersonName.text[0]
+            val c = editTextTextPersonName.text[0].toString().uppercase()
             if (repeatedLetter(c)) {
                 Toast.makeText(this, "Aquesta lletra ja l'has provat.", Toast.LENGTH_SHORT).show()
                 false
@@ -161,11 +164,11 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun repeatedLetter(c: Char): Boolean {
+    private fun repeatedLetter(c: String): Boolean {
         var repeatedLetter = false
         var i = 0
         while (i < tryedLetters.length) {
-            if (tryedLetters[i] == c) {
+            if (tryedLetters[i].toString() == c) {
                 repeatedLetter = true
             }
             i++

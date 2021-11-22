@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/ranking"
+        android:icon="@drawable/ranking"
+        app:showAsAction="ifRoom"
+        android:title="@string/ranking"/>
+    <item
         android:id="@+id/logOutIcon"
         android:icon="@drawable/ic_baseline_logout_24"
         app:showAsAction="always"
