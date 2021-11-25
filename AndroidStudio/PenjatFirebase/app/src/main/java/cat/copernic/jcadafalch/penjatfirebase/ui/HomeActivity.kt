@@ -1,21 +1,29 @@
-package cat.copernic.jcadafalch.penjatfirebase
+package cat.copernic.jcadafalch.penjatfirebase.ui
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.opengl.Visibility
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.children
+import androidx.core.view.get
+import cat.copernic.jcadafalch.penjatfirebase.R
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_home.*
 import java.lang.StringBuilder
+import java.sql.Timestamp
+import java.time.Instant
+import java.time.format.DateTimeFormatter
 import kotlin.collections.hashMapOf as hashMapOf
 
 
@@ -32,8 +40,9 @@ class HomeActivity : AppCompatActivity() {
     private var numErrors: Int = 0
     private var wordLength: Int = 0
     private var finishRound = false
+    private var points = 0
 
-    @RequiresApi(Build.VERSION_CODES.N)
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -46,6 +55,7 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu, menu)
+        menu?.get(0)?.isVisible = false
         return true
     }
 
@@ -57,14 +67,25 @@ class HomeActivity : AppCompatActivity() {
                 showAuth()
                 true
             }
+            R.id.ranking -> {
+                showRanking()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
+
     }
 
     private fun showAuth() {
         val authIntent = Intent(this, AuthActivity::class.java).apply {
         }
         startActivity(authIntent)
+    }
+
+    private fun showRanking() {
+        val rankingIntent = Intent(this, RankingActivity::class.java).apply {
+        }
+        startActivity(rankingIntent)
     }
 
     override fun onBackPressed() {
@@ -74,6 +95,7 @@ class HomeActivity : AppCompatActivity() {
         finish()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setup() {
         title = ""
         val user = "Benvingut $username"
@@ -104,7 +126,8 @@ class HomeActivity : AppCompatActivity() {
                         var i = 0
                         while (i < secretWord.length) {
                             if (secretWord[i].toString() == c) {
-                                xWord = StringBuilder(xWord).also { it.setCharAt(i, c[0]) }.toString()
+                                xWord =
+                                    StringBuilder(xWord).also { it.setCharAt(i, c[0]) }.toString()
                                 guessCorrectWord = true
                                 wordLength++
                             }
@@ -126,8 +149,10 @@ class HomeActivity : AppCompatActivity() {
                                 Toast.LENGTH_SHORT
                             ).show()
                             numErrors++
+                            points -= 10
                             setImageErrors(numErrors)
                             updateNumErrors()
+                            updatePoints()
                         }
                     }
                     editTextTextPersonName.setText("")
@@ -135,13 +160,15 @@ class HomeActivity : AppCompatActivity() {
 
                     if (maxErrors - numErrors == 0) {
                         setStartedFalse()
+                        setUserPoint()
                         finishRound = true
-                        showOver(username)
+                        showOver()
                     }
                     if (wordLength == secretWord.length) {
                         setStartedFalse()
+                        setUserPoint()
                         finishRound = true
-                        showWon(username)
+                        showWon()
                     }
                 }
             }
@@ -189,6 +216,7 @@ class HomeActivity : AppCompatActivity() {
                 textViewPIniciada.text = document.get("xWord").toString()
                 tryedLetters = document.get("tryedLetters").toString()
                 txtTryedLetters.text = document.get("tryedLetters").toString()
+                points = document.get("points").hashCode()
             }
         }
     }
@@ -211,6 +239,14 @@ class HomeActivity : AppCompatActivity() {
         db.collection("joc").document(username).update(
             hashMapOf(
                 "numErrors" to numErrors
+            ) as Map<String, Any>
+        )
+    }
+
+    private fun updatePoints() {
+        db.collection("joc").document(username).update(
+            hashMapOf(
+                "points" to points
             ) as Map<String, Any>
         )
     }
@@ -239,13 +275,41 @@ class HomeActivity : AppCompatActivity() {
         )
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setUserPoint() {
+        var Points = 0
+        db.collection("users").document(username).get().addOnSuccessListener { document ->
+            if (document != null) {
+                //Points =  document.get("points").hashCode()
+                db.collection("users").document(username).update(
+                    hashMapOf(
+                        "points" to document.get("points").hashCode() + points,
+                        "date" to Timestamp.from(Instant.now())
+                    ) as Map<String, Any>
+                )
+            }
+        }
+        Handler().postDelayed(
+            {
+
+            },
+            100
+        )
+        /* db.collection("users").document(username).update(
+             hashMapOf(
+                 "points" to Points+points
+             )as Map<String, Any>
+         )*/
+
+    }
+
     private fun setStartedFalse() {
         db.collection("joc").document(username).update(
             hashMapOf("started" to false) as Map<String, Any>
         )
     }
 
-    private fun showWon(username: String) {
+    private fun showWon() {
         val wonIntent = Intent(this, WonActivity::class.java).apply {
             putExtra("username", username)
             putExtra("secretWord", secretWord)
@@ -254,7 +318,7 @@ class HomeActivity : AppCompatActivity() {
         startActivity(wonIntent)
     }
 
-    private fun showOver(username: String) {
+    private fun showOver() {
         val overIntent = Intent(this, OverActivity::class.java).apply {
             putExtra("username", username)
             putExtra("secretWord", secretWord)

@@ -1,4 +1,4 @@
-package cat.copernic.jcadafalch.penjatfirebase
+package cat.copernic.jcadafalch.penjatfirebase.ui
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -8,23 +8,32 @@ import android.os.Handler
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
+import cat.copernic.jcadafalch.penjatfirebase.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.activity_recupera_partida.*
+import kotlinx.android.synthetic.main.activity_auth.*
+import kotlinx.android.synthetic.main.activity_over.*
+import kotlinx.android.synthetic.main.activity_over.logOutButton
+import kotlinx.android.synthetic.main.activity_over.novaPartidaButton
+import kotlinx.android.synthetic.main.activity_won.*
 
 
 @SuppressLint("StaticFieldLeak")
 private val db = Firebase.firestore
 
-class RecuperaPartida : AppCompatActivity() {
-    private lateinit var username:  String
+class OverActivity : AppCompatActivity() {
+    private lateinit var username: String
+    private lateinit var secretWord: String
+    private val b = R.id.imageButton
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_recupera_partida)
+        setContentView(R.layout.activity_over)
 
         val bundle = intent.extras
         username = bundle?.getString("username").toString()
+        secretWord = bundle?.getString("secretWord").toString()
         setup()
     }
 
@@ -42,6 +51,17 @@ class RecuperaPartida : AppCompatActivity() {
                 showAuth()
                 true
             }
+            R.id.ranking -> {
+                showRanking()
+                true
+            }
+
+            b -> {
+                /*val file: File? = saveImage()
+                if (file != null) share(file)*/
+                share()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
 
@@ -53,6 +73,13 @@ class RecuperaPartida : AppCompatActivity() {
         startActivity(authIntent)
     }
 
+    private fun showRanking() {
+        val rankingIntent = Intent(this, RankingActivity::class.java).apply {
+        }
+        startActivity(rankingIntent)
+    }
+
+
     override fun onBackPressed() {
         super.onBackPressed()
         FirebaseAuth.getInstance().signOut()
@@ -60,69 +87,74 @@ class RecuperaPartida : AppCompatActivity() {
         finish()
     }
 
-    private fun setup(){
+    @SuppressLint("SetTextI18n")
+    private fun setup() {
         title = ""
+        usernameOverText.text = username
+        secretWordText.text = "La paraula secreta era: $secretWord"
 
-        recuperaPartidabutton.setOnClickListener {
-            recoverGame()
+        logOutButton.setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
+            finish()
+            showAuth()
         }
-        novaPartidabutton.setOnClickListener {
-            newGame()
+
+        novaPartidaButton.setOnClickListener {
+            showHome(username)
         }
     }
 
-    private fun newGame() {
+    private fun share() {
+        val string1: String = getString(R.string.msgTitolP)
+        val string2: String = getString(R.string.msgSecreta, secretWord)
+        val string3: String = getString(R.string.msgUsername, username)
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.type = "text/plain"
+        intent.putExtra(Intent.EXTRA_TEXT, string1 + string2 + string3)
+        startActivity(Intent.createChooser(intent, "Compartir amb: "))
+    }
+
+    private fun showHome(username: String) {
         val homeIntent = Intent(this, HomeActivity::class.java).apply {
             putExtra("username", username)
-            putExtra("started", true)
         }
         newSecretWord()
-
         Handler().postDelayed(
-                {
-                    startActivity(homeIntent)
-                },
+            {
+                startActivity(homeIntent)
+            },
             500
         )
-    }
 
-    private fun recoverGame() {
-        val homeIntent = Intent(this, HomeActivity::class.java).apply {
-            putExtra("username", username)
-            putExtra("started", true)
-        }
-        finish()
-        startActivity(homeIntent)
     }
-
 
     private fun newSecretWord() {
-
+        changedataTxt4.text = ""
         db.collection("words").document("arrWords").get().addOnSuccessListener { document ->
             if (document != null) {
-                //changedataTxt.setText(document.get("arrayW").toString())
-                changedataTxt2.text = randomWord(document.get("arrayW").toString())
+                changedataTxt4.text = randomWord(document.get("arrayW").toString())
                 createNewRound()
             }
         }
     }
 
     private fun createNewRound() {
-        val secret = changedataTxt2.text.length
+        val secret = changedataTxt4.text.length
         var xWord = ""
         for (i in 0 until secret) {
-            xWord+= "x"
+            xWord += "x"
         }
         db.collection("joc").document(username).set(
             hashMapOf(
                 "maxErrors" to 6,
                 "numErrors" to 0,
-                "secretWord" to changedataTxt2.text.toString(),
-                "secretWordL" to changedataTxt2.text.length,
+                "secretWord" to changedataTxt4.text.toString(),
+                "secretWordL" to changedataTxt4.text.length,
                 "started" to true,
                 "tryedLetters" to "",
                 "wordLenght" to 0,
-                "xWord" to xWord
+                "xWord" to xWord,
+                "points" to 70
             )
         )
     }

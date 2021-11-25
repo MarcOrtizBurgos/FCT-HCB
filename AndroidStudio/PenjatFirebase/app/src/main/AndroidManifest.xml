@@ -1,38 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="cat.copernic.jcadafalch.penjatfirebase" >
+    xmlns:tools="http://schemas.android.com/tools"
+    package="cat.copernic.jcadafalch.penjatfirebase">
 
+    <!--<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>-->
+    <!--android:requestLegacyExternalStorage="true"-->
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.PenjatFirebase" >
+        android:theme="@style/Theme.PenjatFirebase">
         <activity
-            android:name=".RankingActivity"
+            android:name=".ui.RecuperarContrasenyaActivity"
             android:exported="false" />
         <activity
-            android:name=".OverActivity"
+            android:name=".ui.RegistreActivity"
             android:exported="false" />
         <activity
-            android:name=".WonActivity"
+            android:name=".ui.RankingActivity"
             android:exported="false" />
         <activity
-            android:name=".RecuperaPartida"
+            android:name=".ui.OverActivity"
             android:exported="false" />
         <activity
-            android:name=".HomeActivity"
+            android:name=".ui.WonActivity"
             android:exported="false" />
         <activity
-            android:name=".AuthActivity"
-            android:exported="true" >
+            android:name=".ui.RecuperaPartida"
+            android:exported="false" />
+        <activity
+            android:name=".ui.HomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.AuthActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!--<provider
+            android:authorities="${applicationid}.provider"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATH"
+                android:resource="@xml/provider_paths"
+                />
+        </provider>-->
     </application>
 
 </manifest>

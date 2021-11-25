@@ -28,4 +28,19 @@
     <string name="penjat_0_fallos">Penjat 0 fallos</string>
     <string name="penjat_6_fallos">Penjat 6 fallos</string>
     <string name="ranking">ranking</string>
+    <string name="millors_jugadors">Millors jugadors</string>
+    <string name="registre">Registre</string>
+    <string name="repeteix_la_contrasenya">Repeteix la contrasenya</string>
+    <string name="iniciar_sessi">Iniciar sessió</string>
+    <string name="has_oblidat_la_contrasenya">Has oblidat la contrasenya?</string>
+    <string name="recuperar_contrasenya">Recuperar\nContrasenya</string>
+    <string name="nova_contrasenya">Nova Contrasenya</string>
+    <string name="repeteix_nova_contrasenya">Repeteix nova contrasenya</string>
+    <string name="compartir">Compartir</string>
+    <string name="msgTitol">He guanyat al penjat\n</string>
+    <string name="msgTitolP">He perdut al penjat\n</string>
+    <string name="msgSecreta">La paraula secreta era %1$s\n</string>
+    <string name="msgUsername">Jugador: %1$s</string>
+    <string name="continuar">Continuar</string>
+
 </resources>

@@ -1,6 +1,5 @@
-package cat.copernic.jcadafalch.penjatfirebase
+package cat.copernic.jcadafalch.penjatfirebase.ui
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -13,13 +12,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_auth.*
-import kotlinx.android.synthetic.main.activity_won.*
-
-@SuppressLint("StaticFieldLeak")
-private val db = Firebase.firestore
 
 class AuthActivity : AppCompatActivity() {
-
+    private val db = Firebase.firestore
     private lateinit var username: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,36 +33,7 @@ class AuthActivity : AppCompatActivity() {
     }
 
     private fun setup() {
-        val db = Firebase.firestore
         title = ""
-        singUpButton.setOnClickListener {
-            if (emailEditText.text.isNotEmpty() && !passwordEditText.text.isNullOrEmpty()) {
-                FirebaseAuth.getInstance().createUserWithEmailAndPassword(
-                    emailEditText.text.toString(),
-                    passwordEditText.text.toString()
-
-                ).addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        username = extractUsernameFromEmail(emailEditText.text.toString())
-                        if (makeregister(username, passwordEditText.text.toString())){
-                            Handler().postDelayed(
-                                {
-                                    showHome(it.result?.user?.email ?: "")
-                                },
-                                500
-                            )
-                        }
-
-                    } else {
-                        showAlert("Error amb el registre", "S\'ha produït un error en " +
-                                "intentar registrar a aquest usuari\n\n" +
-                                "Consideri la possibilitat que aquest usuari ja estigui registrat")
-                    }
-                }
-            } else {
-                showAlert("Error!", "Els camps estan buits")
-            }
-        }
         logInButton.setOnClickListener {
             if (emailEditText.text.isNotEmpty() && !passwordEditText.text.isNullOrEmpty()) {
                 FirebaseAuth.getInstance().signInWithEmailAndPassword(
@@ -94,18 +60,28 @@ class AuthActivity : AppCompatActivity() {
                             }
 
                     } else {
-                        showAlert("Error con el Inicio de Sessión", "S'ha produït un error " +
-                                "en intentar iniciar sessió\n\n" +
-                                "Consideri la possibilitat que aquest usuari no estigui registrat.")
+                        showAlert(
+                            "Error con el Inicio de Sessión", "S'ha produït un error " +
+                                    "en intentar iniciar sessió\n\n" +
+                                    "Consideri la possibilitat que aquest usuari no estigui registrat."
+                        )
                     }
                 }
             } else {
-                showAlert("Error!","Els camps estan buits")
+                showAlert("Error!", "Els camps estan buits")
             }
+        }
+
+        singUpButton.setOnClickListener {
+            showRegistre()
+        }
+
+        hasOblidatContrasenya.setOnClickListener {
+           showRecuperaContrasenya()
         }
     }
 
-    private fun showAlert(title: String,msg: String) {
+    private fun showAlert(title: String, msg: String) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(title)
         builder.setMessage(msg)
@@ -127,10 +103,19 @@ class AuthActivity : AppCompatActivity() {
         )
     }
 
+    private fun showRegistre(){
+        startActivity(Intent(this, RegistreActivity::class.java))
+    }
+
     private fun showRecuperaPartida(email: String) {
         val intent = Intent(this, RecuperaPartida::class.java).apply {
             putExtra("username", extractUsernameFromEmail(email))
         }
+        startActivity(intent)
+    }
+
+    private fun showRecuperaContrasenya(){
+        val intent = Intent(this, RecuperarContrasenyaActivity::class.java).apply {}
         startActivity(intent)
     }
 
@@ -164,7 +149,8 @@ class AuthActivity : AppCompatActivity() {
                 "started" to true,
                 "tryedLetters" to "",
                 "wordLenght" to 0,
-                "xWord" to xWord
+                "xWord" to xWord,
+                "points" to 70
             )
         )
     }
@@ -177,43 +163,5 @@ class AuthActivity : AppCompatActivity() {
         return arrWords[0][rt]
     }
 
-    private fun makeregister(username: String, passwd: String):Boolean {
-        var bool1 = false
-        var bool2 = false
-        db.collection("users").document(username).set(
-            hashMapOf("username" to username, "password" to passwd)
-        ).addOnCompleteListener {
-            if (it.isSuccessful) {
-                bool1 = true
-            } else {
-                showAlert("Error!","Error a l\'hora de fer el guardat de usuari")
-            }
-        }
-
-        val secret = changedataTxt.text.length
-        var xWord = ""
-        for (i in 0 until secret) {
-            xWord += "X"
-        }
-        db.collection("joc").document(username).set(
-            hashMapOf(
-                "maxErrors" to 6,
-                "numErrors" to 0,
-                "secretWord" to changedataTxt.text.toString(),
-                "secretWordL" to changedataTxt.text.length,
-                "started" to true,
-                "tryedLetters" to "",
-                "wordLenght" to 0,
-                "xWord" to xWord
-            )
-        ).addOnCompleteListener {
-            if (it.isSuccessful) {
-                bool2 = true
-            } else {
-                showAlert("Error!","Error a l\'hora de fer el guardat de dades")
-            }
-        }
-        return bool1&&bool2
-    }
 
 }

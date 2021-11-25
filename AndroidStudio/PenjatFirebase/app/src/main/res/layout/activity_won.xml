@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#80FF85"
-    tools:context=".WonActivity">
+    android:id="@+id/rootView"
+    tools:context=".ui.WonActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,7 +22,6 @@
             android:layout_width="match_parent"
             android:layout_height="70dp"
             android:text="@string/felicitats"
-            android:textAlignment="center"
             android:textColor="#000000"
             android:textSize="50sp" />
 
@@ -74,6 +74,12 @@
             android:text="@string/tancar_sessio"
             android:textSize="20sp"
             tools:ignore="TextContrastCheck" />
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_baseline_share_24" />
 
         <TextView
             android:id="@+id/changedataTxt3"

@@ -1,4 +1,4 @@
-package cat.copernic.jcadafalch.penjatfirebase
+package cat.copernic.jcadafalch.penjatfirebase.ui
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -8,31 +8,34 @@ import android.os.Handler
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import androidx.core.view.get
+import cat.copernic.jcadafalch.penjatfirebase.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import kotlinx.android.synthetic.main.activity_auth.*
 import kotlinx.android.synthetic.main.activity_over.*
+import kotlinx.android.synthetic.main.activity_recupera_partida.*
 
 
 @SuppressLint("StaticFieldLeak")
 private val db = Firebase.firestore
 
-class OverActivity : AppCompatActivity() {
-    private lateinit var username: String
-    private lateinit var secretWord: String
+class RecuperaPartida : AppCompatActivity() {
+    private lateinit var username:  String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_over)
+        setContentView(R.layout.activity_recupera_partida)
 
         val bundle = intent.extras
         username = bundle?.getString("username").toString()
-        secretWord = bundle?.getString("secretWord").toString()
         setup()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu, menu)
+        menu?.get(0)?.isVisible = false
         return true
     }
 
@@ -44,6 +47,10 @@ class OverActivity : AppCompatActivity() {
                 showAuth()
                 true
             }
+            R.id.ranking -> {
+                showRanking()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
 
@@ -53,7 +60,12 @@ class OverActivity : AppCompatActivity() {
         val authIntent = Intent(this, AuthActivity::class.java).apply {
         }
         startActivity(authIntent)
+    }
 
+    private fun showRanking(){
+        val rankingIntent = Intent(this, RankingActivity::class.java).apply {
+        }
+        startActivity(rankingIntent)
     }
 
     override fun onBackPressed() {
@@ -63,65 +75,70 @@ class OverActivity : AppCompatActivity() {
         finish()
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun setup() {
+    private fun setup(){
         title = ""
-        usernameOverText.text = username
-        secretWordText.text = "La paraula secreta era: $secretWord"
 
-        logOutButton.setOnClickListener {
-            FirebaseAuth.getInstance().signOut()
-            finish()
-            showAuth()
+        recuperaPartidabutton.setOnClickListener {
+            recoverGame()
         }
-
-        novaPartidaButton.setOnClickListener {
-            showHome(username)
+        novaPartidabutton.setOnClickListener {
+            newGame()
         }
     }
 
-    private fun showHome(username: String) {
+    private fun newGame() {
         val homeIntent = Intent(this, HomeActivity::class.java).apply {
             putExtra("username", username)
+            putExtra("started", true)
         }
         newSecretWord()
+
         Handler().postDelayed(
                 {
                     startActivity(homeIntent)
                 },
             500
         )
-
     }
 
-    private fun newSecretWord() {
+    private fun recoverGame() {
+        val homeIntent = Intent(this, HomeActivity::class.java).apply {
+            putExtra("username", username)
+            putExtra("started", true)
+        }
+        finish()
+        startActivity(homeIntent)
+    }
 
+
+    private fun newSecretWord() {
+        changedataTxt2.text = ""
         db.collection("words").document("arrWords").get().addOnSuccessListener { document ->
             if (document != null) {
-                changedataTxt4.text = randomWord(document.get("arrayW").toString())
+                changedataTxt2.text = randomWord(document.get("arrayW").toString())
                 createNewRound()
             }
         }
     }
 
-
     private fun createNewRound() {
-        val secret = changedataTxt4.text.length
+        val secret = changedataTxt2.text.length
         var xWord = ""
         for (i in 0 until secret) {
             xWord += "x"
         }
         db.collection("joc").document(username).set(
-                hashMapOf(
-                        "maxErrors" to 6,
-                        "numErrors" to 0,
-                        "secretWord" to changedataTxt4.text.toString(),
-                        "secretWordL" to changedataTxt4.text.length,
-                        "started" to true,
-                        "tryedLetters" to "",
-                        "wordLenght" to 0,
-                        "xWord" to xWord
-                )
+            hashMapOf(
+                "maxErrors" to 6,
+                "numErrors" to 0,
+                "secretWord" to changedataTxt2.text.toString(),
+                "secretWordL" to changedataTxt2.text.length,
+                "started" to true,
+                "tryedLetters" to "",
+                "wordLenght" to 0,
+                "xWord" to xWord,
+                "points" to 70
+            )
         )
     }
 
