@@ -31,6 +31,8 @@ class RegistreActivity : AppCompatActivity() {
 
 
         supportActionBar?.hide()
+
+        setup()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -49,14 +51,7 @@ class RegistreActivity : AppCompatActivity() {
                 println("PASSW = $password")
                 println("EMAIL = $email")
                 println("USERNAME $username")
-                if (makeregister(email, password) ){
-                    Handler().postDelayed(
-                        {
-                            showHome(email)
-                        },
-                        500
-                    )
-                }
+                makeregister(email, password)
             }
         }
 
@@ -152,10 +147,9 @@ class RegistreActivity : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun makeregister(email: String, passwd: String): Boolean {
+    private fun makeregister(email: String, passwd: String){
         var bool1 = false
         var bool2 = false
-        var bool3 = false
 
         FirebaseAuth.getInstance().createUserWithEmailAndPassword(
             emailEditText.text.toString(),
@@ -163,7 +157,7 @@ class RegistreActivity : AppCompatActivity() {
 
         ).addOnCompleteListener {
             if (it.isSuccessful) {
-                bool3 = true
+                bool2 = true
             } else {
                 showAlert(
                     "Error amb el registre", "S\'ha produït un error en " +
@@ -196,26 +190,15 @@ class RegistreActivity : AppCompatActivity() {
         for (i in 0 until secret) {
             xWord += "X"
         }
-        db.collection("joc").document(username).set(
-            hashMapOf(
-                "maxErrors" to 6,
-                "numErrors" to 0,
-                "secretWord" to changedataTxt5.text.toString(),
-                "secretWordL" to changedataTxt5.text.length,
-                "started" to true,
-                "tryedLetters" to "",
-                "wordLenght" to 0,
-                "xWord" to xWord,
-                "points" to 70
+        newSecretWord()
+        if (bool1 && bool2){
+            Handler().postDelayed(
+                {
+                    showHome(email)
+                },
+                500
             )
-        ).addOnCompleteListener {
-            if (it.isSuccessful) {
-                bool2 = true
-            } else {
-                showAlert("Error!", "Error a l\'hora de fer el guardat de dades")
-            }
         }
-        return bool1 && bool2 && bool3
     }
 
     private fun extractUsernameFromEmail(email: String): String {

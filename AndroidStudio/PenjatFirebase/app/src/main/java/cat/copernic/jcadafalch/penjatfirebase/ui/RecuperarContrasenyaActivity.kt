@@ -82,9 +82,10 @@ class RecuperarContrasenyaActivity : AppCompatActivity() {
                     println("EMAIL + $email")
                     println("PASSWORD - " + document.get("password").toString())
                     bool = true
-                    auth.signInWithEmailAndPassword(
+                    val password = document.get("password").toString()
+                    FirebaseAuth.getInstance().signInWithEmailAndPassword(
                         email,
-                        document.get("password").toString(),
+                        password,
                     ).addOnCompleteListener {
                         if (it.isSuccessful) {
                             val currentUser = auth.currentUser

@@ -56,7 +56,7 @@ class OverActivity : AppCompatActivity() {
                 true
             }
 
-            b -> {
+            R.id.share -> {
                 /*val file: File? = saveImage()
                 if (file != null) share(file)*/
                 share()

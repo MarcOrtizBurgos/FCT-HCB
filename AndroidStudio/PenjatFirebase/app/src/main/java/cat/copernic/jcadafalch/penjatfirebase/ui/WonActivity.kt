@@ -44,7 +44,6 @@ private val db = Firebase.firestore
 class WonActivity : AppCompatActivity() {
     private lateinit var username: String
     private lateinit var secretWord: String
-    private val b = R.id.imageButton
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_won)
@@ -72,7 +71,7 @@ class WonActivity : AppCompatActivity() {
                 showRanking()
                 true
             }
-            b -> {
+            R.id.share -> {
                 /*val file: File? = saveImage()
                 if (file != null) share(file)*/
                 share()
