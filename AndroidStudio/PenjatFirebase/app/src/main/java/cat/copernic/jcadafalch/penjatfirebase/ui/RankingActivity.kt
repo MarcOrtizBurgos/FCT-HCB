@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cat.copernic.jcadafalch.penjatfirebase.CustomAdapter
@@ -25,6 +26,7 @@ class RankingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ranking)
+
         title = ""
 
         recyclerView = findViewById(R.id.recyclerView)
@@ -70,6 +72,7 @@ class RankingActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater: MenuInflater = menuInflater
         inflater.inflate(R.menu.menu, menu)
+        menu?.get(0)?.isVisible = false
         return true
     }
 

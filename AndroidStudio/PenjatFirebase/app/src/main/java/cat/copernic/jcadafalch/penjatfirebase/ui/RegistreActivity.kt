@@ -147,7 +147,7 @@ class RegistreActivity : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun makeregister(email: String, passwd: String){
+    private fun makeregister(email: String, passwd: String) {
         var bool1 = false
         var bool2 = false
 
@@ -191,13 +191,10 @@ class RegistreActivity : AppCompatActivity() {
             xWord += "X"
         }
         newSecretWord()
-        if (bool1 && bool2){
-            Handler().postDelayed(
-                {
-                    showHome(email)
-                },
-                500
-            )
+        if (bool1 && bool2) {
+            showAuth()
+
+
         }
     }
 

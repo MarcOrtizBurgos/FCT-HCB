@@ -2,18 +2,15 @@ package cat.copernic.jcadafalch.penjatfirebase.ui
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.opengl.Visibility
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.children
 import androidx.core.view.get
 import cat.copernic.jcadafalch.penjatfirebase.R
 import com.google.firebase.firestore.ktx.firestore
@@ -23,7 +20,6 @@ import kotlinx.android.synthetic.main.activity_home.*
 import java.lang.StringBuilder
 import java.sql.Timestamp
 import java.time.Instant
-import java.time.format.DateTimeFormatter
 import kotlin.collections.hashMapOf as hashMapOf
 
 
@@ -277,10 +273,8 @@ class HomeActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setUserPoint() {
-        var Points = 0
         db.collection("users").document(username).get().addOnSuccessListener { document ->
             if (document != null) {
-                //Points =  document.get("points").hashCode()
                 db.collection("users").document(username).update(
                     hashMapOf(
                         "points" to document.get("points").hashCode() + points,
@@ -295,11 +289,6 @@ class HomeActivity : AppCompatActivity() {
             },
             100
         )
-        /* db.collection("users").document(username).update(
-             hashMapOf(
-                 "points" to Points+points
-             )as Map<String, Any>
-         )*/
 
     }
 
