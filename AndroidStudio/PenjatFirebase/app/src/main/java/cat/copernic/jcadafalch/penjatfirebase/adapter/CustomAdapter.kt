@@ -11,14 +11,6 @@ import cat.copernic.jcadafalch.penjatfirebase.dataclass.User
 
 class CustomAdapter(private val userList: ArrayList<User>): RecyclerView.Adapter<CustomAdapter.ViewHolder>(){
 
-    /*private val images = intArrayOf(
-        R.mipmap.penjat0_foreground,
-        R.mipmap.penjat1_foreground,
-        R.mipmap.penjat2_foreground,
-        R.mipmap.penjat3_foreground,
-        R.mipmap.penjat4_foreground,
-        R.mipmap.penjat5_foreground,
-        R.mipmap.penjat6_foreground)*/
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
         val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.card_layout, viewGroup, false)
