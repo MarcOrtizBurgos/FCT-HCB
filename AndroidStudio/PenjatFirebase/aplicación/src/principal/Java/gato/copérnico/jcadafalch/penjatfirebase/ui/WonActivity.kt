@@ -37,6 +37,7 @@ import java.io.IOException
 import java.util.*
 import java.util.jar.Manifest
 
+//HolA te hackiao
 
 @SuppressLint("StaticFieldLeak")
 private val db = Firebase.firestore
