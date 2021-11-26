@@ -27,7 +27,7 @@ class OverActivity : AppCompatActivity() {
     private lateinit var username: String
     private lateinit var secretWord: String
     private val b = R.id.imageButton
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_over)
