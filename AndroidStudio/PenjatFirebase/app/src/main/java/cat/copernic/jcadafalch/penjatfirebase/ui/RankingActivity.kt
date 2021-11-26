@@ -11,9 +11,9 @@ import android.view.MenuItem
 import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import cat.copernic.jcadafalch.penjatfirebase.CustomAdapter
+import cat.copernic.jcadafalch.penjatfirebase.adapter.CustomAdapter
 import cat.copernic.jcadafalch.penjatfirebase.R
-import cat.copernic.jcadafalch.penjatfirebase.User
+import cat.copernic.jcadafalch.penjatfirebase.dataclass.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 

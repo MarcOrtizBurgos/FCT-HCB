@@ -1,4 +1,4 @@
-package cat.copernic.jcadafalch.penjatfirebase
+package cat.copernic.jcadafalch.penjatfirebase.model
 
 import java.sql.Timestamp
 
