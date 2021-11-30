@@ -7,6 +7,7 @@ import android.os.Handler
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import cat.copernic.jcadafalch.penjatfirebase.R.layout.activity_auth
+import cat.copernic.jcadafalch.penjatfirebase.clases.Connexion
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
@@ -28,6 +29,8 @@ class AuthActivity : AppCompatActivity() {
         val bundle = Bundle()
         bundle.putString("message", "Integración de Firebase completa")
         analytics.logEvent("InitScreen", bundle)
+
+        //Connexion(this).getConnectionState()
 
         setup()
     }

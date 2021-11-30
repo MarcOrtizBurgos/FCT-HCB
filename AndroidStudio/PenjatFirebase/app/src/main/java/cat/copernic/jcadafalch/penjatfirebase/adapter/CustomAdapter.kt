@@ -8,6 +8,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import cat.copernic.jcadafalch.penjatfirebase.R
 import cat.copernic.jcadafalch.penjatfirebase.dataclass.User
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 
 class CustomAdapter(private val userList: ArrayList<User>): RecyclerView.Adapter<CustomAdapter.ViewHolder>(){
 
@@ -19,8 +21,12 @@ class CustomAdapter(private val userList: ArrayList<User>): RecyclerView.Adapter
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
         val user: User = userList[i]
+
+        val dateFormat: DateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
+        val date = user.date
+
         viewHolder.itemUsername.text = user.username
-        viewHolder.itemTimestamp.text = user.date.toString()
+        viewHolder.itemTimestamp.text = dateFormat.format(date).toString()
         viewHolder.itemImage.setImageResource(R.mipmap.penjat6_foreground)
         viewHolder.itemPoint.text = user.points.toString()
     }

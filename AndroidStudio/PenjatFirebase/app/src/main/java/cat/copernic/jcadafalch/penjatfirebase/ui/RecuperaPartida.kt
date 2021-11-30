@@ -1,7 +1,12 @@
 package cat.copernic.jcadafalch.penjatfirebase.ui
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.net.NetworkInfo
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -10,11 +15,10 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.core.view.get
 import cat.copernic.jcadafalch.penjatfirebase.R
+import cat.copernic.jcadafalch.penjatfirebase.clases.Connexion
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.android.synthetic.main.activity_auth.*
-import kotlinx.android.synthetic.main.activity_over.*
 import kotlinx.android.synthetic.main.activity_recupera_partida.*
 
 
@@ -30,6 +34,9 @@ class RecuperaPartida : AppCompatActivity() {
         val bundle = intent.extras
         username = bundle?.getString("username").toString()
         setup()
+
+        //Connexion(this).isInternetAvailable(this)
+        //Connexion(this).getConnectionState()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -84,6 +91,8 @@ class RecuperaPartida : AppCompatActivity() {
         novaPartidabutton.setOnClickListener {
             newGame()
         }
+        Thread.sleep(2000)
+        Connexion(this).getConnectionState()
     }
 
     private fun newGame() {
