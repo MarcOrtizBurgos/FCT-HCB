@@ -8,6 +8,8 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
 import androidx.core.view.get
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +18,7 @@ import cat.copernic.jcadafalch.penjatfirebase.R
 import cat.copernic.jcadafalch.penjatfirebase.dataclass.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
+import kotlinx.android.synthetic.main.activity_ranking.*
 
 class RankingActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
@@ -39,16 +42,35 @@ class RankingActivity : AppCompatActivity() {
 
         recyclerView.adapter = customAdapter
 
+        spinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parentView: AdapterView<*>?,
+                selectedItemView: View?,
+                position: Int,
+                id: Long
+            ) {
+                if(id.equals("Punts")){
+                    eventChangeListener("points")
+                }else{
+                    eventChangeListener("date")
+                }
+            }
 
-        eventChangeListener()
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+        })
+
+
+        eventChangeListener("points")
 
 
 
     }
 
-    private fun eventChangeListener() {
-
-        db.collection("users").orderBy("points", Query.Direction.DESCENDING).
+    private fun eventChangeListener(attr: String) {
+        userArrayList.clear()
+        db.collection("users").orderBy(attr, Query.Direction.DESCENDING).
             addSnapshotListener(object: EventListener<QuerySnapshot>{
                 @SuppressLint("NotifyDataSetChanged")
                 override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
