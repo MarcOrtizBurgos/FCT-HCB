@@ -91,8 +91,6 @@ class RecuperaPartida : AppCompatActivity() {
         novaPartidabutton.setOnClickListener {
             newGame()
         }
-        Thread.sleep(2000)
-        Connexion(this).getConnectionState()
     }
 
     private fun newGame() {

@@ -2,9 +2,8 @@ package cat.copernic.jcadafalch.penjatfirebase.ui
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
+import android.media.MediaPlayer
+import android.os.*
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -21,6 +20,8 @@ import java.lang.StringBuilder
 import java.sql.Timestamp
 import java.time.Instant
 import kotlin.collections.hashMapOf as hashMapOf
+import android.os.Vibrator
+import android.os.Build
 
 
 @SuppressLint("StaticFieldLeak")
@@ -111,6 +112,7 @@ class HomeActivity : AppCompatActivity() {
                 editTextTextPersonName.toString().isEmpty() -> {
                     Toast.makeText(this, "No has introduit ninguna lletra", Toast.LENGTH_SHORT)
                         .show()
+                    vibracioN(false)
                 }
                 editTextTextPersonName.toString().isNotEmpty() -> {
                     if (oneCharacter()) {
@@ -136,7 +138,7 @@ class HomeActivity : AppCompatActivity() {
                             rightLetters += xWord[i]
                             i++
                         }
-
+                        vibracioN(guessCorrectWord)
                         updateXWord()
                         if (!guessCorrectWord) {
                             Toast.makeText(
@@ -150,6 +152,9 @@ class HomeActivity : AppCompatActivity() {
                             updateNumErrors()
                             updatePoints()
                         }
+                    }
+                    else{
+                        vibracioN(false)
                     }
                     editTextTextPersonName.setText("")
                     getAllValues()
@@ -314,5 +319,20 @@ class HomeActivity : AppCompatActivity() {
         }
 
         startActivity(overIntent)
+    }
+
+    private fun vibracioN(value : Boolean) {
+        var sonido : MediaPlayer? = null
+        if(value){
+            sonido = MediaPlayer.create(this, R.raw.acert)
+        } else{
+            sonido = MediaPlayer.create(this, R.raw.error)
+        }
+        sonido.start()
+        val v = this.getSystemService(VIBRATOR_SERVICE) as Vibrator
+        val pattern = longArrayOf(0, 1000, 300)
+        v.vibrate(pattern, -1)
+        Thread.sleep(2000)
+        v.cancel()
     }
 }

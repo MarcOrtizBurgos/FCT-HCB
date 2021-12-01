@@ -1,18 +1,20 @@
 package cat.copernic.jcadafalch.penjatfirebase.ui
 
 import android.content.Intent
+import android.os.*
 import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import cat.copernic.jcadafalch.penjatfirebase.R.layout.activity_auth
-import cat.copernic.jcadafalch.penjatfirebase.clases.Connexion
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_auth.*
+import android.os.Vibrator
+
+
+
 
 class AuthActivity : AppCompatActivity() {
     private val db = Firebase.firestore
