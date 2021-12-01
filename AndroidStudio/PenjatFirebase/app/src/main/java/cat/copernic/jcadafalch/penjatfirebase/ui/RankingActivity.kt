@@ -49,11 +49,13 @@ class RankingActivity : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
-                if(id.equals("Punts")){
+                if(position == 0){
                     eventChangeListener("points")
-                }else{
+                }
+                else if(position == 1){
                     eventChangeListener("date")
                 }
+
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
