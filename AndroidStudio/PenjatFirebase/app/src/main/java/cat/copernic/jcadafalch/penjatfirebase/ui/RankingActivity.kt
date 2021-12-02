@@ -49,10 +49,9 @@ class RankingActivity : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
-                if(position == 0){
+                if (position == 0) {
                     eventChangeListener("points")
-                }
-                else if(position == 1){
+                } else if (position == 1) {
                     eventChangeListener("date")
                 }
 
@@ -63,34 +62,27 @@ class RankingActivity : AppCompatActivity() {
             }
         })
 
-
         eventChangeListener("points")
-
-
-
     }
 
     private fun eventChangeListener(attr: String) {
         userArrayList.clear()
-        db.collection("users").orderBy(attr, Query.Direction.DESCENDING).
-            addSnapshotListener(object: EventListener<QuerySnapshot>{
+        db.collection("users").orderBy(attr, Query.Direction.DESCENDING)
+            .addSnapshotListener(object : EventListener<QuerySnapshot> {
                 @SuppressLint("NotifyDataSetChanged")
                 override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
-                    if (error != null){
-                        Log.e("Firestore Error",error.message.toString())
+                    if (error != null) {
+                        Log.e("Firestore Error", error.message.toString())
                         return
                     }
-
-                    for (dc: DocumentChange in value?.documentChanges!!){
-                        if (dc.type == DocumentChange.Type.ADDED){
+                    for (dc: DocumentChange in value?.documentChanges!!) {
+                        if (dc.type == DocumentChange.Type.ADDED) {
                             userArrayList.add(dc.document.toObject(User::class.java))
                         }
                     }
-
                     customAdapter.notifyDataSetChanged()
                 }
             })
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -123,7 +115,7 @@ class RankingActivity : AppCompatActivity() {
         startActivity(authIntent)
     }
 
-    private fun showRanking(){
+    private fun showRanking() {
         val rankingIntent = Intent(this, RankingActivity::class.java).apply {
         }
         startActivity(rankingIntent)
