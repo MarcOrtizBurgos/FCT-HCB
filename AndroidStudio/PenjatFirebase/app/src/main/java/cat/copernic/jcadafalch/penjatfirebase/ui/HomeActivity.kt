@@ -92,10 +92,11 @@ class HomeActivity : AppCompatActivity() {
         finish()
     }
 
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setup() {
         title = ""
-        val user = "Benvingut $username"
+        val user = getString(R.string.benvigut,username).toString()
         emailTextView.text = user
 
         getAllValues()
@@ -110,7 +111,7 @@ class HomeActivity : AppCompatActivity() {
         enviaButton.setOnClickListener {
             when {
                 editTextTextPersonName.toString().isEmpty() -> {
-                    Toast.makeText(this, "No has introduit ninguna lletra", Toast.LENGTH_SHORT)
+                    Toast.makeText(this, getString(R.string.nope), Toast.LENGTH_SHORT)
                         .show()
                     vibracioN(false)
                 }
@@ -143,7 +144,7 @@ class HomeActivity : AppCompatActivity() {
                         if (!guessCorrectWord) {
                             Toast.makeText(
                                 this,
-                                "Aquesta paraula no conté la lletra $c.",
+                                getString(R.string.noconte,c),
                                 Toast.LENGTH_SHORT
                             ).show()
                             numErrors++
@@ -180,13 +181,13 @@ class HomeActivity : AppCompatActivity() {
         return if (Character.isLetter(editTextTextPersonName.text[0])) {
             val c = editTextTextPersonName.text[0].toString().uppercase()
             if (repeatedLetter(c)) {
-                Toast.makeText(this, "Aquesta lletra ja l'has provat.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.provat), Toast.LENGTH_SHORT).show()
                 false
             } else {
                 true
             }
         } else {
-            Toast.makeText(this, "El caràcter introduït no és una lletra.", Toast.LENGTH_SHORT)
+            Toast.makeText(this, getString(R.string.noes), Toast.LENGTH_SHORT)
                 .show()
             false
         }
@@ -231,7 +232,7 @@ class HomeActivity : AppCompatActivity() {
             4 -> penjat.setImageResource(R.mipmap.penjat4_foreground)
             5 -> penjat.setImageResource(R.mipmap.penjat5_foreground)
             6 -> penjat.setImageResource(R.mipmap.penjat6_foreground)
-            else -> Toast.makeText(this, "Error amb el numero de errors", Toast.LENGTH_SHORT).show()
+            else -> Toast.makeText(this, getString(R.string.errornum), Toast.LENGTH_SHORT).show()
         }
 
     }

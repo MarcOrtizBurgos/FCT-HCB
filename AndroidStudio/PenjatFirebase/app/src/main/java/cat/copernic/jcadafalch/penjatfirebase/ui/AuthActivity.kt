@@ -12,8 +12,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_auth.*
 import android.os.Vibrator
-
-
+import cat.copernic.jcadafalch.penjatfirebase.R
 
 
 class AuthActivity : AppCompatActivity() {
@@ -29,7 +28,7 @@ class AuthActivity : AppCompatActivity() {
         //Analytics Event
         val analytics = FirebaseAnalytics.getInstance(this)
         val bundle = Bundle()
-        bundle.putString("message", "Integración de Firebase completa")
+        bundle.putString("message", getString(R.string.integrasion))
         analytics.logEvent("InitScreen", bundle)
 
         //Connexion(this).getConnectionState()
@@ -66,14 +65,14 @@ class AuthActivity : AppCompatActivity() {
 
                     } else {
                         showAlert(
-                            "Error con el Inicio de Sessión", "S'ha produït un error " +
-                                    "en intentar iniciar sessió\n\n" +
-                                    "Consideri la possibilitat que aquest usuari no estigui registrat."
+                            getString(R.string.error1), getString(R.string.error2) +
+                                    getString(R.string.error3) +
+                                    getString(R.string.error4)
                         )
                     }
                 }
             } else {
-                showAlert("Error!", "Els camps estan buits")
+                showAlert("Error!", getString(R.string.vacio))
             }
         }
 
@@ -90,7 +89,7 @@ class AuthActivity : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(title)
         builder.setMessage(msg)
-        builder.setPositiveButton("Acceptar", null)
+        builder.setPositiveButton(getString(R.string.acceptar), null)
         val dialog: AlertDialog = builder.create()
         dialog.show()
     }

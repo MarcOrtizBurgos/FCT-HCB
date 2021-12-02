@@ -104,7 +104,7 @@ class WonActivity : AppCompatActivity() {
     private fun setup() {
         title = ""
         usernameWonText.text = username
-        secretWordText2.text = "La paraula secreta era: $secretWord"
+        secretWordText2.text = getString(R.string.secreta,secretWord)
         logOutButton.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
             finish()
@@ -124,7 +124,7 @@ class WonActivity : AppCompatActivity() {
         val intent = Intent(Intent.ACTION_SEND)
         intent.type = "text/plain"
         intent.putExtra(Intent.EXTRA_TEXT, string1 + string2 + string3)
-        startActivity(Intent.createChooser(intent, "Compartir amb: "))
+        startActivity(Intent.createChooser(intent, getString(R.string.compart)))
     }
 
 //TODO TOP--------------------------------

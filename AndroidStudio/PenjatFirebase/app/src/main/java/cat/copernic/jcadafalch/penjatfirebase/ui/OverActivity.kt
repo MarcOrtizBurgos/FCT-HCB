@@ -92,7 +92,7 @@ class OverActivity : AppCompatActivity() {
     private fun setup() {
         title = ""
         usernameOverText.text = username
-        secretWordText.text = "La paraula secreta era: $secretWord"
+        secretWordText.text = getString(R.string.secreta,secretWord)
 
         logOutButton.setOnClickListener {
             FirebaseAuth.getInstance().signOut()
@@ -112,7 +112,7 @@ class OverActivity : AppCompatActivity() {
         val intent = Intent(Intent.ACTION_SEND)
         intent.type = "text/plain"
         intent.putExtra(Intent.EXTRA_TEXT, string1 + string2 + string3)
-        startActivity(Intent.createChooser(intent, "Compartir amb: "))
+        startActivity(Intent.createChooser(intent, getString(R.string.compart)))
     }
 
     private fun showHome(username: String) {

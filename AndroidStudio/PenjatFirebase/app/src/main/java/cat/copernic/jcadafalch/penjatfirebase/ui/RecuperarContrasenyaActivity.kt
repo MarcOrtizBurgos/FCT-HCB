@@ -27,8 +27,6 @@ class RecuperarContrasenyaActivity : AppCompatActivity() {
                     emailEditTextC.text.toString()
                 )
             ) {
-                println("CONTRASENYES IGUALS")
-
                 val psswd = passwordEditTextC.text.toString()
                 val email = emailEditTextC.text.toString()
                 println(psswd)
@@ -43,25 +41,23 @@ class RecuperarContrasenyaActivity : AppCompatActivity() {
         var errorMessage = ""
 
         if (!checkEmailFormat(email)){
-            errorMessage+="Format del correu electrònic incorrecte"
+            errorMessage+=getString(R.string.format)
             bool = false
         }
 
         if (psswd1.isEmpty()) {
-            errorMessage += "Falta introduir la contrasenya.\n"
+            errorMessage += getString(R.string.intro)
             bool = false
         }
         if (psswd2.isEmpty()) {
-            errorMessage += "Falta introduir la contrasenya repetida.\n"
+            errorMessage += getString(R.string.repe)
             bool = false
         }
 
 
         if (psswd1.isNotEmpty() && psswd2.isNotEmpty()) {
             if (psswd1 != psswd2) {
-                println("PASSWD 1 - " + psswd1)
-                println("PASSWD 2 - " + psswd2)
-                errorMessage += "Les contrasenyes no coincideixen.\n"
+                errorMessage += getString(R.string.coinci)
                 bool = false
             }
         }
@@ -78,9 +74,6 @@ class RecuperarContrasenyaActivity : AppCompatActivity() {
         db.collection("users").get().addOnSuccessListener { result ->
             for (document in result) {
                 if (document.id == username) {
-                    println("FIND USERNMAE $username")
-                    println("EMAIL + $email")
-                    println("PASSWORD - " + document.get("password").toString())
                     bool = true
                     val password = document.get("password").toString()
                     FirebaseAuth.getInstance().signInWithEmailAndPassword(
@@ -90,7 +83,6 @@ class RecuperarContrasenyaActivity : AppCompatActivity() {
                         if (it.isSuccessful) {
                             val currentUser = auth.currentUser
                             currentUser?.updatePassword(psswd)?.addOnSuccessListener {
-                                println("SUCCESSFUL")
                                 db.collection("users").document(username).update(
                                     hashMapOf(
                                         "password" to psswd
@@ -99,20 +91,20 @@ class RecuperarContrasenyaActivity : AppCompatActivity() {
                                 auth.signOut()
                                 Toast.makeText(
                                     this,
-                                    "S'ha canbiat la contrasenya",
+                                    getString(R.string.canvi),
                                     Toast.LENGTH_SHORT
                                 ).show()
                                 showAuth()
                                 finish()
                             }
                         } else {
-                            showAlert("Error en inici de sessió")
+                            showAlert(getString(R.string.errorinici))
                         }
                     }
                 }
             }
             if (!bool) {
-                showAlert("L\'usuari no està registrat")
+                showAlert(getString(R.string.regist))
             }
         }
 

@@ -48,9 +48,6 @@ class RegistreActivity : AppCompatActivity() {
                 val email = emailEditText.text.toString()
                 username = extractUsernameFromEmail(emailEditText.text.toString())
                 val password = passwordEditTextR.text.toString()
-                println("PASSW = $password")
-                println("EMAIL = $email")
-                println("USERNAME $username")
                 makeregister(email, password)
             }
         }
@@ -66,36 +63,36 @@ class RegistreActivity : AppCompatActivity() {
         var bool = true
 
         if (email.isEmpty()) {
-            errorMessage += "Falta introduir el correu electronic.\n"
+            errorMessage += getString(R.string.falta1)
             bool = false
         } else if (!checkEmailFormat(email)) {
-            errorMessage += "Format correu electronic incorrecte.\n"
+            errorMessage += getString(R.string.falta2)
             bool = false
         }
 
         if (password.isEmpty()) {
-            errorMessage += "Falta introduir la contrasenya.\n"
+            errorMessage += getString(R.string.falta3)
             bool = false
         }
         if (password2.isEmpty()) {
-            errorMessage += "Falta introduir la contrasenya repetida.\n"
+            errorMessage += getString(R.string.falta4)
             bool = false
         }
 
         if (password.length < 6) {
-            errorMessage += "La contrasenya ha de ser mínim de 6 caracters\n"
+            errorMessage += getString(R.string.errormsg1)
             bool = false
         }
 
         if (password2.length < 6) {
-            errorMessage += "La contrasenya repetida ha de ser mínim de 6 caracters\n"
+            errorMessage += getString(R.string.errormsg2)
             bool = false
         }
 
         if (password.isNotEmpty() && password2.isNotEmpty()) {
             if (password.length >= 6 && password2.length >= 6) {
                 if (password != password2) {
-                    errorMessage += "Les contrasenyes no coincideixen.\n"
+                    errorMessage += getString(R.string.errormsg3)
                     bool = false
                 }
             }
@@ -123,7 +120,7 @@ class RegistreActivity : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle(title)
         builder.setMessage(msg)
-        builder.setPositiveButton("Acceptar", null)
+        builder.setPositiveButton(getString(R.string.acceptar), null)
         val dialog: AlertDialog = builder.create()
         dialog.show()
     }
@@ -160,9 +157,9 @@ class RegistreActivity : AppCompatActivity() {
                 bool2 = true
             } else {
                 showAlert(
-                    "Error amb el registre", "S\'ha produït un error en " +
-                            "intentar registrar a aquest usuari\n\n" +
-                            "Consideri la possibilitat que aquest usuari ja estigui registrat"
+                    getString(R.string.err1), getString(R.string.err2) +
+                            getString(R.string.err3) +
+                            getString(R.string.err4)
                 )
             }
         }
@@ -181,7 +178,7 @@ class RegistreActivity : AppCompatActivity() {
             if (it.isSuccessful) {
                 bool1 = true
             } else {
-                showAlert("Error!", "Error a l\'hora de fer el guardat de usuari")
+                showAlert("Error!", getString(R.string.errorhora))
             }
         }
 
