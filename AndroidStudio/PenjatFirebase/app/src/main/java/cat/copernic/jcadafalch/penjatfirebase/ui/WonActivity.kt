@@ -118,8 +118,8 @@ class WonActivity : AppCompatActivity() {
 
 
     private fun share() {
-        val string1: String = getString(R.string.msgTitol)
-        val string2: String = getString(R.string.msgSecreta, secretWord)
+        val string1: String = getString(R.string.msgTitol)+"\n"
+        val string2: String = getString(R.string.msgSecreta, secretWord)+"\n"
         val string3: String = getString(R.string.msgUsername, username)
         val intent = Intent(Intent.ACTION_SEND)
         intent.type = "text/plain"

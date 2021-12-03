@@ -37,9 +37,9 @@
     <string name="nova_contrasenya">Nova Contrasenya</string>
     <string name="repeteix_nova_contrasenya">Repeteix nova contrasenya</string>
     <string name="compartir">Compartir</string>
-    <string name="msgTitol">"He guanyat al penjat \n"</string>
-    <string name="msgTitolP">"He perdut al penjat \n"</string>
-    <string name="msgSecreta">La paraula secreta era %1$s\n</string>
+    <string name="msgTitol">He guanyat al penjat</string>
+    <string name="msgTitolP">He perdut al penjat</string>
+    <string name="msgSecreta">La paraula secreta era %1$s</string>
     <string name="msgUsername">Jugador: %1$s</string>
     <string name="continuar">Continuar</string>
     <string name="integrasion">Integració de Firebase completa</string>
@@ -76,5 +76,6 @@
     <string name="err3">intentar registrar a aquest usuari\n\n</string>
     <string name="err4">Consideri la possibilitat que aquest usuari ja estigui registrat</string>
     <string name="errorhora">Error a l\'hora de fer el guardat de usuari</string>
+    <string name="selecciona_el_teu_idioma">Selecciona el teu idioma</string>
 
 </resources>

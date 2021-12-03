@@ -1,6 +1,7 @@
 package cat.copernic.jcadafalch.penjatfirebase.ui
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.*
 import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
@@ -13,6 +14,7 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_auth.*
 import android.os.Vibrator
 import cat.copernic.jcadafalch.penjatfirebase.R
+import java.util.*
 
 
 class AuthActivity : AppCompatActivity() {
@@ -33,7 +35,41 @@ class AuthActivity : AppCompatActivity() {
 
         //Connexion(this).getConnectionState()
 
+        listenerbuttonidioma()
+
         setup()
+    }
+
+    private fun listenerbuttonidioma(){
+        buttonCat.setOnClickListener {
+            idioma("ca","ES")
+            val intent = Intent(this, AuthActivity::class.java).apply {
+            }
+            finish()
+            startActivity(intent)
+        }
+        buttonEsp.setOnClickListener {
+            idioma("es","ES")
+            val intent = Intent(this, AuthActivity::class.java).apply {
+            }
+            finish()
+            startActivity(intent)
+        }
+        buttonEn.setOnClickListener {
+            idioma("en","")
+            val intent = Intent(this, AuthActivity::class.java).apply {
+            }
+            finish()
+            startActivity(intent)
+        }
+    }
+
+    private fun idioma(language:String,country:String){
+        val localizacion = Locale(language, country)
+        Locale.setDefault(localizacion)
+        val config = Configuration()
+        config.locale = localizacion
+        baseContext.resources.updateConfiguration(config, baseContext.resources.displayMetrics)
     }
 
     private fun setup() {
