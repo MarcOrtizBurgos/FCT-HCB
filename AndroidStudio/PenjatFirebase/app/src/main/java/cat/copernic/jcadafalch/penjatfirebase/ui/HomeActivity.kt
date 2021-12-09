@@ -178,17 +178,21 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun oneCharacter(): Boolean {
-        return if (Character.isLetter(editTextTextPersonName.text[0])) {
-            val c = editTextTextPersonName.text[0].toString().uppercase()
-            if (repeatedLetter(c)) {
-                Toast.makeText(this, getString(R.string.provat), Toast.LENGTH_SHORT).show()
+        return if(!editTextTextPersonName.text.isNullOrEmpty())  {
+            if (Character.isLetter(editTextTextPersonName.text[0])){
+                val c = editTextTextPersonName.text[0].toString().uppercase()
+                if (repeatedLetter(c)) {
+                    Toast.makeText(this,getString(R.string.provat) , Toast.LENGTH_SHORT).show()
+                    false
+                } else {
+                    true
+                }
+            }else{
+                Toast.makeText(this, getString(R.string.noes), Toast.LENGTH_SHORT).show()
                 false
-            } else {
-                true
             }
-        } else {
-            Toast.makeText(this, getString(R.string.noes), Toast.LENGTH_SHORT)
-                .show()
+        }else{
+            Toast.makeText(this, getString(R.string.noes), Toast.LENGTH_SHORT).show()
             false
         }
     }
